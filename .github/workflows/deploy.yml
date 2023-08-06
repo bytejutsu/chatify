@@ -10,7 +10,7 @@ on:
     branches:
       - production
 
-# Authenticate to the the server via ssh
+# Authenticate to the server via ssh
 # and run our deployment script
 jobs:
   deploy:
