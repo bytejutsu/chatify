@@ -24,7 +24,7 @@ export NVM_DIR=~/.nvm
 source ~/.nvm/nvm.sh
 
 # Compile npm assets
-npm run prod
+npm run build
 
 # Run database migrations
 php artisan migrate --force
