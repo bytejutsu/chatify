@@ -19,6 +19,10 @@ php artisan clear-compiled
 # Recreate cache
 php artisan optimize
 
+#necessary if you are using nvm
+export NVM_DIR=~/.nvm
+source ~/.nvm/nvm.sh
+
 # Compile npm assets
 npm run prod
 
