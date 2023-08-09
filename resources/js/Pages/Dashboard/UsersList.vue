@@ -17,11 +17,8 @@
                         </div>
                         -->
                         <span class="h-6 bg-green-100 text-green-800 text-xs rounded-full text-base p-2">available</span>
-                        <i class="fa-solid fa-comment"></i>
-                        <i class="fa-solid fa-arrow-right"></i>
-
-
-
+                        <i class="fa-solid fa-comment fa-xl"></i>
+                        <i class="fa-solid fa-arrow-right fa-xl"></i>
                     </div>
                 </div>
             </li>
