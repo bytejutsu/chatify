@@ -18,7 +18,8 @@
                             {{user}} <span v-if="user.isOnline">Online</span>
                         </div>
                         -->
-                        <span class="h-6 bg-green-100 text-green-800 text-xs rounded-full text-base p-2">available</span>
+                        <span class="h-6 bg-green-100 text-green-800 text-xs rounded-full p-2">online</span>
+                        <span class="h-6 bg-red-100 text-red-800 text-xs rounded-full p-2">offline</span>
                         <i class="fa-solid fa-comment fa-xl"></i>
                         <i class="fa-solid fa-arrow-right fa-xl"></i>
                     </div>
