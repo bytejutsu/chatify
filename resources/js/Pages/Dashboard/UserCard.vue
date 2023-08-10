@@ -1,23 +1,21 @@
 <template>
     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg max-w-4xl">
         <div class="flex flex-row justify-between p-4 space-x-8 items-center">
-            <div class="flex flex-row justify-start">
-                <div class="flex flex-col justify-start items-center">
-                    <img class="w-16 h-16 rounded-full object-cover" alt="User Avatar" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/2048px-User-avatar.svg.png" >
+            <div class="flex items-center space-x-4">
+                <div class="flex-shrink-0">
+                    <img class="w-16 h-16 rounded-full object-cover" alt="User Avatar" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTg2ZExAhgvkbtEYLbIBjydf2sHcSBdYTM29eeq1aT-vzxhdWTLtg0VgjUpmxXFW0Y8Wik&usqp=CAU" >
                 </div>
-                <div class="flex flex-col justify-start space-y-4">
-                    <h3 class="text-xl font-bold text-gray-800">{{user.name}}</h3>
-                    <p class="text-gray-600 text-sm">{{user.email}}</p>
+                <div class="flex flex-col w-[200px] max-w-[200px]">
+                    <h3 class="text-xl font-bold text-gray-800">{{ user.name }}</h3>
+                    <p class="text-gray-600 text-sm">{{ user.email }}</p>
                 </div>
             </div>
-            <!--
-            <div class="p-6 text-gray-900">
-                {{user}} <span v-if="user.isOnline">Online</span>
-            </div>
-            -->
-            <!--<span class="h-6 bg-green-100 text-green-800 text-xs rounded-full p-2">online</span>-->
-            <!--<span class="h-6 bg-red-100 text-red-800 text-xs rounded-full p-2">offline</span>-->
-            {{ status }}
+            <span
+                class="px-2 py-1 rounded-full font-semibold"
+                :class="{ 'bg-green-300 text-white': status === 1, 'bg-red-300 text-white': status === 0 }"
+            >
+            {{ status === 1 ? 'Online' : 'Offline' }}
+            </span>
             <i class="fa-solid fa-comment fa-xl"></i>
             <i class="fa-solid fa-arrow-right fa-xl"></i>
         </div>
@@ -44,7 +42,6 @@ onMounted(() => {
             //console.log(e);
             //status.value = e.status;
             status.value = e.status;
-            console.log(status);
         });
 
 });

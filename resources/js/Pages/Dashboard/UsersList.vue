@@ -1,6 +1,6 @@
 <template>
     <div>
-        <ul>
+        <ul class="space-y-4">
             <li v-for="user in users" :key="user.id">
                 <UserCard :user="user"/>
             </li>
