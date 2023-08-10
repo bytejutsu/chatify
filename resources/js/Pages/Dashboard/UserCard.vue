@@ -16,7 +16,7 @@
             >
             {{ status === 1 ? 'Online' : 'Offline' }}
             </span>
-            <i class="fa-solid fa-comment fa-xl"></i>
+            <Link :href="route('chat.show', { user: user.id })"><i class="fa-solid fa-comment fa-xl"></i></Link>
             <i class="fa-solid fa-arrow-right fa-xl"></i>
         </div>
     </div>
@@ -25,6 +25,7 @@
 <script setup>
 
 import { onMounted, ref } from 'vue';
+import { Link } from '@inertiajs/vue3'
 
 const { user } = defineProps({
     user: Object

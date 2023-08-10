@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Models\User;
@@ -42,3 +43,5 @@ Route::middleware('auth')->group(function () {
 require __DIR__.'/auth.php';
 
 //Route::middleware('auth')->get('/users', [UserController::class, 'index']);
+
+Route::middleware('auth')->get('/chat/{user}', [ChatController::class, 'show'])->name('chat.show');
