@@ -21,7 +21,7 @@ class UpdateOnlineStatus
             Auth::user()->update(['is_online' => true]);
 
             // broadcast online userstatuschanged event
-            broadcast(new UserStatusChanged(Auth::user(), 'online'));
+            broadcast(new UserStatusChanged(Auth::user(), 1));
         }
 
         return $next($request);

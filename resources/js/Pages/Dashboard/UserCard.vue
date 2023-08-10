@@ -43,7 +43,7 @@ onMounted(() => {
             // e.user and e.status contain the user and status information
             //console.log(e);
             //status.value = e.status;
-            status.value = e.status === 'online' ? 1 : 0;
+            status.value = e.status;
             console.log(status);
         });
 

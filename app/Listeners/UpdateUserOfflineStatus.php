@@ -26,6 +26,6 @@ class UpdateUserOfflineStatus
         $event->user->update(['is_online' => false]);
 
         //broadcast offline userstatuschanged event
-        broadcast(new UserStatusChanged($event->user, 'offline'));
+        broadcast(new UserStatusChanged($event->user, 0));
     }
 }

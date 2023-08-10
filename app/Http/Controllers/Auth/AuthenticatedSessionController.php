@@ -36,9 +36,6 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        //broadcast online userstatuschanged event
-        //broadcast(new UserStatusChanged(Auth::user(), 'online'));
-
         return redirect()->intended(RouteServiceProvider::HOME);
     }
 
