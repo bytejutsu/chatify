@@ -3,7 +3,7 @@
         <!-- user info -->
         <div class="flex items-center">
             <img class="rounded-full w-10 h-10"
-                 src="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" />
+                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTg2ZExAhgvkbtEYLbIBjydf2sHcSBdYTM29eeq1aT-vzxhdWTLtg0VgjUpmxXFW0Y8Wik&usqp=CAU" />
             <div class="pl-2">
                 <div class="font-semibold">
                     <a class="hover:underline" href="#">John Doe</a>
