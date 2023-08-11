@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col bg-white h-[calc(100vh-65px)]">
-        <ChatHeader />
+        <ChatHeader :user="user" />
         <div class="flex flex-col grow justify-between overflow-y-scroll">
             <!-- chat messages -->
             <ul class="flex flex-col px-4 py-4">
@@ -39,5 +39,9 @@
 <script setup>
 import ChatHeader from '@/Pages/Chat/ChatHeader.vue';
 import ChatInput from '@/Pages/Chat/ChatInput.vue';
+
+const { user } = defineProps({
+    user: Object
+});
 
 </script>

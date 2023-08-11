@@ -2,7 +2,7 @@
     <Head title="Chat" />
 
     <AuthenticatedLayout class="max-h-screen">
-        <ChatInterface/>
+        <ChatInterface :user="user"/>
     </AuthenticatedLayout>
 </template>
 

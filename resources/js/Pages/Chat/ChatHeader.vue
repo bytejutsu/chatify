@@ -6,9 +6,9 @@
                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTg2ZExAhgvkbtEYLbIBjydf2sHcSBdYTM29eeq1aT-vzxhdWTLtg0VgjUpmxXFW0Y8Wik&usqp=CAU" />
             <div class="pl-2">
                 <div class="font-semibold">
-                    <a class="hover:underline" href="#">John Doe</a>
+                    <a class="hover:underline" href="#">{{user.name}}</a>
                 </div>
-                <div class="text-xs text-gray-600">Online</div>
+                <div class="text-xs text-gray-600">{{ status ? 'online' : 'offline' }}</div>
             </div>
         </div>
         <!-- end user info -->
@@ -25,7 +25,25 @@
     </div>
 </template>
 
-<script>
+<script setup>
+
+import { onMounted, ref } from 'vue';
+
+const { user } = defineProps({
+    user: Object
+});
+
+const status = ref(user.is_online)
+
+
+onMounted(() => {
+
+    window.Echo.private(`user-status.${user.id}`)
+        .listen('UserStatusChanged', (e) => {
+            status.value = e.status;
+        });
+
+});
 
 </script>
 
