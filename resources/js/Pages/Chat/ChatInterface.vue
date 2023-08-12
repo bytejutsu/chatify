@@ -132,6 +132,7 @@ onMounted(() => {
             //this.messages.push(e.message);
             console.log(e);
             messages.value.push(e.message);
+            scrollToBottom();
         });
 });
 
