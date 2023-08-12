@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MessageSent;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -53,7 +54,29 @@ class ChatController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        //dd('update is {$id}');
+
+        // Validate the request
+        $request->validate([
+            'message' => 'required',
+        ]);
+
+        // Save the message to the database
+        /*
+        $message = Message::create([
+            'content' => $request->message,
+            'chat_id' => $request->chat_id,
+            // other fields like user_id, etc.
+        ]);
+        */
+
+        $message = $request['message'];
+
+        // Fire the event
+        event(new MessageSent($message));
+
+        // Return a response
+        return response()->json(['message' => 'Success'], 200);
     }
 
     /**

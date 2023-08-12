@@ -45,3 +45,5 @@ require __DIR__.'/auth.php';
 //Route::middleware('auth')->get('/users', [UserController::class, 'index']);
 
 Route::middleware('auth')->get('/chat/{user}', [ChatController::class, 'show'])->name('chat.show');
+
+Route::middleware('auth')->post('/chat/{id}', [ChatController::class, 'update'])->name('chat.update');

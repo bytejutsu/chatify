@@ -63,6 +63,7 @@
 import ChatHeader from '@/Pages/Chat/ChatHeader.vue';
 import ChatInput from '@/Pages/Chat/ChatInput.vue';
 import { ref, nextTick, onMounted } from 'vue';
+import { router } from '@inertiajs/vue3'
 
 const { user } = defineProps({
     user: Object
@@ -80,6 +81,7 @@ const scrollToBottom = () => {
     });
 };
 
+/*
 const sendMessage = () => {
     if (inputMessage.value.trim() !== '') {
         messages.value.push(inputMessage.value);
@@ -87,7 +89,52 @@ const sendMessage = () => {
         scrollToBottom();
     }
 };
+*/
 
-onMounted(scrollToBottom);
+/*
+function sendMessage() {
+    if (inputMessage.value.trim() !== '') {
+        router.post(
+            '/chat/1',
+            { message: inputMessage.value },
+            {
+                onSuccess: page => {
+                        inputMessage.value = ''; // Clear the input
+                        scrollToBottom();
+                    },
+                onError: errors => { errors.forEach(error => console.error(error));}
+            }
+        );
+    }
+}
+*/
+
+function sendMessage() {
+    if (inputMessage.value.trim() !== '') {
+        window.axios.post('/chat/1', { message: inputMessage.value })
+            .then((response) => {
+                inputMessage.value = ''; // Clear the input
+                scrollToBottom();
+                console.log(response);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    }
+}
+
+
+onMounted(() => {
+    scrollToBottom();
+
+    window.Echo.channel(`chat.${1}`)
+        .listen('MessageSent', (e) => {
+            //this.messages.push(e.message);
+            console.log(e);
+            messages.value.push(e.message);
+        });
+});
+
+// onMounted(scrollToBottom);
 
 </script>
