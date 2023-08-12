@@ -15,18 +15,16 @@
 
         <!-- chat box action -->
         <div>
-            <button class="inline-flex hover:bg-indigo-50 rounded-full p-2" type="button">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-            </button>
+            <Link :href="route('dashboard')" class="inline-flex hover:bg-indigo-50 rounded-full px-2 py-4" as="button" type="button">
+                <i class="fa-solid fa-xmark fa-xl"></i>
+            </Link>
         </div>
         <!-- end chat box action -->
     </div>
 </template>
 
 <script setup>
-
+import { Link } from '@inertiajs/vue3'
 import { onMounted, ref } from 'vue';
 
 const { user } = defineProps({
@@ -34,7 +32,6 @@ const { user } = defineProps({
 });
 
 const status = ref(user.is_online)
-
 
 onMounted(() => {
 

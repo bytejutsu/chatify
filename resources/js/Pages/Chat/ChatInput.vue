@@ -15,13 +15,11 @@
         </div>
 
         <!-- chat send action -->
-
         <div>
             <button class="inline-flex hover:bg-indigo-50 rounded-full p-2" type="button">
                 <i class="fa-regular fa-paper-plane fa-lg"></i>
             </button>
         </div>
-
         <!-- end chat send action -->
     </div>
 </template>
