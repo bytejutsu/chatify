@@ -4,7 +4,7 @@
     <AuthenticatedLayout>
         <div class="p-12">
             <div class="flex justify-center">
-                chats
+                <ChatList />
             </div>
         </div>
     </AuthenticatedLayout>
@@ -14,6 +14,7 @@
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
+import ChatList from "@/Pages/Chat/ChatList.vue";
 
 </script>
 

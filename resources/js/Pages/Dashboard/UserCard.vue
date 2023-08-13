@@ -3,7 +3,7 @@
         <div class="flex flex-row justify-between p-4 space-x-8 items-center">
             <div class="flex items-center space-x-4">
                 <div class="flex-shrink-0">
-                    <img class="w-16 h-16 rounded-full object-cover" alt="User Avatar" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTg2ZExAhgvkbtEYLbIBjydf2sHcSBdYTM29eeq1aT-vzxhdWTLtg0VgjUpmxXFW0Y8Wik&usqp=CAU" >
+                    <img class="w-16 h-16 rounded-full object-cover" alt="User Avatar" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTg2ZExAhgvkbtEYLbIBjydf2sHcSBdYTM29eeq1aT-vzxhdWTLtg0VgjUpmxXFW0Y8Wik&usqp=CAU">
                 </div>
                 <div class="flex flex-col w-[200px] max-w-[200px]">
                     <h3 class="text-xl font-bold text-gray-800">{{ user.name }}</h3>

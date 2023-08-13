@@ -62,8 +62,8 @@
 </template>
 
 <script setup>
-import ChatHeader from '@/Pages/Chat/ChatHeader.vue';
-import ChatInput from '@/Pages/Chat/ChatInput.vue';
+import ChatHeader from '@/Pages/Chat/ChatPage/ChatHeader.vue';
+import ChatInput from '@/Pages/Chat/ChatPage/ChatInput.vue';
 import { ref, nextTick, onMounted } from 'vue';
 import { router } from '@inertiajs/vue3'
 

@@ -11,7 +11,7 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
-import ChatInterface from '@/Pages/Chat/ChatInterface.vue';
+import ChatInterface from '@/Pages/Chat/ChatPage/ChatInterface.vue';
 
 import { ref, onMounted } from 'vue';
 
