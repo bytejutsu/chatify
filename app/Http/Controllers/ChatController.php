@@ -14,7 +14,7 @@ class ChatController extends Controller
      */
     public function index()
     {
-        //
+        return Inertia::render('Chat/Index');
     }
 
     /**
@@ -38,7 +38,7 @@ class ChatController extends Controller
      */
     public function show(User $user)
     {
-        return Inertia::render('Chat/Index', ['user' => $user]);
+        return Inertia::render('Chat/ChatPage', ['user' => $user]);
     }
 
     /**

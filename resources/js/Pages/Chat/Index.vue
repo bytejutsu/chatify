@@ -1,23 +1,19 @@
 <template>
-    <Head title="Chat" />
+    <Head title="Chats" />
 
-    <AuthenticatedLayout class="max-h-screen">
-        <div class="py-2 h-[calc(100vh-66px)]">
-            <ChatInterface :user="user" class="h-full"/>
+    <AuthenticatedLayout>
+        <div class="p-12">
+            <div class="flex justify-center">
+                chats
+            </div>
         </div>
     </AuthenticatedLayout>
 </template>
 
 <script setup>
+
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
-import ChatInterface from '@/Pages/Chat/ChatInterface.vue';
-
-import { ref, onMounted } from 'vue';
-
-const { user } = defineProps({
-    user: Object,
-});
 
 </script>
 
