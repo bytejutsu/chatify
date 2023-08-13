@@ -4,7 +4,7 @@
             <div class="overflow-x-auto">
                 <table class="w-full">
                     <thead class="invisible">
-                    <tr class="bg-black text-left text-xs font-semibold uppercase tracking-widest text-white">
+                    <tr class="bg-black text-center text-xs font-semibold uppercase tracking-widest text-white">
                         <th class="px-5 py-3" colspan="1">x</th>
                         <th class="px-5 py-3" colspan="1">x</th>
                         <th class="px-5 py-3" colspan="1">x</th>
