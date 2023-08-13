@@ -22,7 +22,8 @@ const showingNavigationDropdown = ref(false);
                             <!-- Logo -->
                             <div class="shrink-0 flex items-center">
                                 <Link :href="route('dashboard')">
-                                    <ApplicationLogoImage class="block h-9 w-auto fill-current text-gray-800"/>
+                                   <!-- <ApplicationLogo class="block h-auto w-auto fill-current text-gray-800"/> -->
+                                    <ApplicationLogoImage class="block h-auto w-auto fill-current text-gray-800"/>
                                 </Link>
                             </div>
 
@@ -143,8 +144,15 @@ const showingNavigationDropdown = ref(false);
             </header>
 
             <!-- Page Content -->
+            <!--
             <main>
                 <slot />
+            </main>
+            -->
+            <main>
+                <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                    <slot />
+                </div>
             </main>
         </div>
     </div>

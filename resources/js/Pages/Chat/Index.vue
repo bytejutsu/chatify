@@ -2,7 +2,9 @@
     <Head title="Chat" />
 
     <AuthenticatedLayout class="max-h-screen">
-        <ChatInterface :user="user"/>
+        <div class="py-2 h-[calc(100vh-66px)]">
+            <ChatInterface :user="user" class="h-full"/>
+        </div>
     </AuthenticatedLayout>
 </template>
 
