@@ -10,7 +10,7 @@
                             <!-- chat message left-->
                             <div class="flex justify-start items-center mb-6">
                                 <div class="flex-1 relative">
-                                    <div class="bg-indigo-400 text-white break-words p-2 rounded-lg w-fit max-w-md shadow-lg">{{message}}</div>
+                                    <div class="bg-indigo-400 text-white break-words p-2 rounded-lg w-fit max-w-md shadow-lg">{{message.content}}</div>
                                     <!-- arrow -->
                                     <div class="absolute left-0 top-1/2 transform -translate-x-1/2 rotate-45 w-2 h-2 bg-indigo-400 shadow-lg"></div>
                                     <!-- end arrow -->
@@ -22,7 +22,7 @@
                             <!-- chat message right-->
                             <div class="flex justify-end items-center mb-6 max-w-full">
                                 <div class="flex relative">
-                                    <div class="bg-indigo-100 text-gray-800 break-words p-2 rounded-lg w-fit max-w-md shadow-lg">{{message}}</div>
+                                    <div class="bg-indigo-100 text-gray-800 break-words p-2 rounded-lg w-fit max-w-md shadow-lg">{{message.content}}</div>
                                     <!-- arrow -->
                                     <div class="absolute right-0 top-1/2 transform translate-x-1/2 rotate-45 w-2 h-2 bg-indigo-100 shadow-lg"></div>
                                     <!-- end arrow -->
@@ -71,7 +71,9 @@ const { chat } = defineProps({
     chat: Object
 });
 
-const messages = ref(Array.from({ length: 7 }, (_, index) => `Message ${index}`));
+const messages = ref(Array.from({ length: 7 }, (_, index) => ({ content: `Message ${index}`, chat_id: chat.id })));
+
+
 const scrollContainer = ref(null);
 const inputMessage = ref('');
 
@@ -113,7 +115,7 @@ function sendMessage() {
 
 function sendMessage() {
     if (inputMessage.value.trim() !== '') {
-        window.axios.post('/chat/1', { message: inputMessage.value })
+        window.axios.post(`/chat/${chat.id}`, { message: {content: inputMessage.value, chat_id: chat.id} })
             .then((response) => {
                 inputMessage.value = ''; // Clear the input
                 scrollToBottom();
@@ -129,7 +131,7 @@ function sendMessage() {
 onMounted(() => {
     scrollToBottom();
 
-    window.Echo.channel(`chat.${1}`)
+    window.Echo.channel(`chat.${chat.id}`)
         .listen('MessageSent', (e) => {
             //this.messages.push(e.message);
             console.log(e);
