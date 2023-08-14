@@ -4,10 +4,25 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Chat extends Model
 {
     use HasFactory;
+
+    public $incrementing = false;
+    protected $keyType = 'string';
+    protected $primaryKey = 'id';
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        // Automatically generate a UUID for the primary key when creating a new chat
+        static::creating(function ($model) {
+            $model->{$model->getKeyName()} = (string) Str::uuid();
+        });
+    }
 
     protected $fillable = [
         'user1_id',

@@ -79,13 +79,24 @@ class ChatController extends Controller
     {
         $chat = Chat::find($id);
 
-        $chat->load('user1'); // Load the user1 relationship
-        $chat->load('user2'); // Load the user2 relationship
-        $chat->load('latestMessage');
-        $chat->load('messages');
+        // Return 404 if the chat doesn't exist
+        if (!$chat) {
+            abort(404);
+        }
+
+        // Load the user1,user2,... relationships
+        $chat->load('user1', 'user2', 'latestMessage', 'messages');
+
 
         // Determine the current user and the correspondent
         $currentUser = auth()->user();
+
+        // Check if the current user is one of the chat participants
+        if ($currentUser->id !== $chat->user1->id && $currentUser->id !== $chat->user2->id) {
+            // Return 403 if the current user is not a participant in the chat
+            abort(403, 'You are not authorized to access this chat.');
+        }
+
         $correspondent = ($chat->user1->id == $currentUser->id) ? $chat->user2 : $chat->user1;
 
         // Prepare the chatData to pass to the view
