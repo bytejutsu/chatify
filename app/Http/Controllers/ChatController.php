@@ -16,7 +16,9 @@ class ChatController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Chat/Index');
+        $chats = Chat::all();
+
+        return Inertia::render('Chat/Index', ['chats' => $chats]);
     }
 
     /**
