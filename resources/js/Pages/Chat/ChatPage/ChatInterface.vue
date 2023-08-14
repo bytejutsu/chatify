@@ -1,7 +1,7 @@
 <template>
     <div class="shadow-lg">
         <div class="flex flex-col bg-white h-full rounded-md">
-            <ChatHeader :user="user" />
+            <ChatHeader :user="chat.user2" />
             <div ref="scrollContainer" class="flex flex-col grow justify-between overflow-y-auto scroll-smooth overflow-x-clip">
                 <!-- chat messages -->
                 <ul class="flex flex-col px-4 py-4">
@@ -67,8 +67,8 @@ import ChatInput from '@/Pages/Chat/ChatPage/ChatInput.vue';
 import { ref, nextTick, onMounted } from 'vue';
 import { router } from '@inertiajs/vue3'
 
-const { user } = defineProps({
-    user: Object
+const { chat } = defineProps({
+    chat: Object
 });
 
 const messages = ref(Array.from({ length: 7 }, (_, index) => `Message ${index}`));

@@ -44,6 +44,8 @@ require __DIR__.'/auth.php';
 
 Route::middleware('auth')->get('/chat', [ChatController::class, 'index'])->name('chat.index');
 
-Route::middleware('auth')->get('/chat/{user}', [ChatController::class, 'show'])->name('chat.show');
+Route::middleware('auth')->post('/chat/start', [ChatController::class, 'startChat'])->name('chat.start');
+
+Route::middleware('auth')->get('/chat/{id}', [ChatController::class, 'show'])->name('chat.show');
 
 Route::middleware('auth')->post('/chat/{id}', [ChatController::class, 'update'])->name('chat.update');

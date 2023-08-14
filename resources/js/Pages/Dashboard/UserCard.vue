@@ -16,7 +16,8 @@
             >
             {{ status === 1 ? 'Online' : 'Offline' }}
             </span>
-            <Link :href="route('chat.show', { user: user.id })"><i class="fa-solid fa-comment fa-xl"></i></Link>
+            <!--<Link :href="route('chat.show', { user: user.id })"><i class="fa-solid fa-comment fa-xl"></i></Link>-->
+            <Link href="/chat/start" method="post" :data="{ userB_id: user.id }"><i class="fa-solid fa-comment fa-xl"></i></Link>
             <i class="fa-solid fa-arrow-right fa-xl"></i>
         </div>
     </div>
@@ -33,6 +34,17 @@ const { user } = defineProps({
 
 const status = ref(user.is_online)
 
+/*
+const startChat = () => {
+    window.axios.post('/chat/start', { userB_id: user.id })
+        .then((response) => {
+            console.log(response);
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+};
+*/
 
 onMounted(() => {
 

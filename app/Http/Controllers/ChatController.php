@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\MessageSent;
+use App\Models\Chat;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -34,11 +35,55 @@ class ChatController extends Controller
     }
 
     /**
+     * Start a chat with another user.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     */
+    public function startChat(Request $request)
+    {
+        // Validate the request (e.g., ensure userB_id is present and valid)
+        $request->validate([
+            'userB_id' => 'required|exists:users,id',
+        ]);
+
+        // IDs of the two users involved in the chat
+        $userA_id = auth()->id(); // Assuming User A is the currently authenticated user
+        $userB_id = $request->input('userB_id');
+
+        // Check for existing chat between the two users
+        $chat = Chat::where(function ($query) use ($userA_id, $userB_id) {
+            $query->where('user1_id', $userA_id)
+                ->where('user2_id', $userB_id);
+        })->orWhere(function ($query) use ($userA_id, $userB_id) {
+            $query->where('user1_id', $userB_id)
+                ->where('user2_id', $userA_id);
+        })->first();
+
+        // Create a new chat if none exists
+        if (!$chat) {
+            $chat = Chat::create([
+                'user1_id' => $userA_id,
+                'user2_id' => $userB_id,
+            ]);
+        }
+
+        // Redirect to the chat interface (or return a view, as needed)
+        return redirect()->route('chat.show', ['id' => $chat->id]);
+    }
+
+    /**
      * Display the specified resource.
      */
-    public function show(User $user)
+    public function show(Request $request, string $id)
     {
-        return Inertia::render('Chat/ChatPage/Index', ['user' => $user]);
+        $chat = Chat::find($id);
+
+        $chat->load('user1'); // Load the user1 relationship
+        $chat->load('user2'); // Load the user2 relationship
+        $chat->load('latestMessage');
+        $chat->load('messages');
+
+        return Inertia::render('Chat/ChatPage/Index', ['chat' => $chat]);
     }
 
     /**
