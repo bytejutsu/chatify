@@ -16,8 +16,7 @@
             >
             {{ status === 1 ? 'Online' : 'Offline' }}
             </span>
-            <!--<Link :href="route('chat.show', { user: user.id })"><i class="fa-solid fa-comment fa-xl"></i></Link>-->
-            <Link href="/chat/start" method="post" :data="{ userB_id: user.id }"><i class="fa-solid fa-comment fa-xl"></i></Link>
+            <Link href="/chat/start" method="post" as="button" :data="{ userB_id: user.id }"><i class="fa-solid fa-comment fa-xl"></i></Link>
             <i class="fa-solid fa-arrow-right fa-xl"></i>
         </div>
     </div>

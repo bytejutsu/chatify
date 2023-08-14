@@ -1,24 +1,12 @@
 <template>
     <div class="shadow-lg">
         <div class="flex flex-col bg-white h-full rounded-md">
-            <ChatHeader :user="chat.user2" />
+            <ChatHeader :user="correspondent" />
             <div ref="scrollContainer" class="flex flex-col grow justify-between overflow-y-auto scroll-smooth overflow-x-clip">
                 <!-- chat messages -->
                 <ul class="flex flex-col px-4 py-4">
                     <li v-for="(message, index) in messages" :key="index" class="">
-                        <div v-if="index % 2 === 0">
-                            <!-- chat message left-->
-                            <div class="flex justify-start items-center mb-6">
-                                <div class="flex-1 relative">
-                                    <div class="bg-indigo-400 text-white break-words p-2 rounded-lg w-fit max-w-md shadow-lg">{{message.content}}</div>
-                                    <!-- arrow -->
-                                    <div class="absolute left-0 top-1/2 transform -translate-x-1/2 rotate-45 w-2 h-2 bg-indigo-400 shadow-lg"></div>
-                                    <!-- end arrow -->
-                                </div>
-                            </div>
-                            <!-- end chat message left-->
-                        </div>
-                        <div v-else>
+                        <div v-if="message.sender_id === currentUser.id">
                             <!-- chat message right-->
                             <div class="flex justify-end items-center mb-6 max-w-full">
                                 <div class="flex relative">
@@ -29,6 +17,18 @@
                                 </div>
                             </div>
                             <!-- end chat message right-->
+                        </div>
+                        <div v-else>
+                            <!-- chat message left-->
+                            <div class="flex justify-start items-center mb-6">
+                                <div class="flex-1 relative">
+                                    <div class="bg-indigo-400 text-white break-words p-2 rounded-lg w-fit max-w-md shadow-lg">{{message.content}}</div>
+                                    <!-- arrow -->
+                                    <div class="absolute left-0 top-1/2 transform -translate-x-1/2 rotate-45 w-2 h-2 bg-indigo-400 shadow-lg"></div>
+                                    <!-- end arrow -->
+                                </div>
+                            </div>
+                            <!-- end chat message left-->
                         </div>
                     </li>
                 </ul>
@@ -67,11 +67,16 @@ import ChatInput from '@/Pages/Chat/ChatPage/ChatInput.vue';
 import { ref, nextTick, onMounted } from 'vue';
 import { router } from '@inertiajs/vue3'
 
-const { chat } = defineProps({
-    chat: Object
+router.reload({ only: ["lazy_data"]});
+
+
+const { chat, currentUser, correspondent } = defineProps({
+    chat: Object,
+    currentUser: Object,
+    correspondent: Object,
 });
 
-const messages = ref(Array.from({ length: 7 }, (_, index) => ({ content: `Message ${index}`, chat_id: chat.id })));
+const messages = ref(chat.messages);
 
 
 const scrollContainer = ref(null);
@@ -85,39 +90,44 @@ const scrollToBottom = () => {
     });
 };
 
-/*
-const sendMessage = () => {
-    if (inputMessage.value.trim() !== '') {
-        messages.value.push(inputMessage.value);
-        inputMessage.value = ''; // Clear the input
-        scrollToBottom();
-    }
+const clearInput = () => {
+    inputMessage.value = ''; // Clear the input
 };
-*/
+
+const inputIsNotEmpty = () => {
+    return inputMessage.value.trim() !== '';
+};
 
 /*
 function sendMessage() {
-    if (inputMessage.value.trim() !== '') {
-        router.post(
-            '/chat/1',
-            { message: inputMessage.value },
+    if (inputIsNotEmpty()) {
+        router.visit(
+            `/chat/${chat.id}`,
             {
+                method: "post",
+                data: {
+                    message: {content: inputMessage.value, chat_id: chat.id}
+                },
+                preserveState: true,
                 onSuccess: page => {
-                        inputMessage.value = ''; // Clear the input
-                        scrollToBottom();
-                    },
-                onError: errors => { errors.forEach(error => console.error(error));}
+                    clearInput();
+                    scrollToBottom();
+                },
+                onError: errors => {
+                    errors.forEach(error => console.error(error));
+                },
             }
         );
     }
 }
 */
 
+
 function sendMessage() {
-    if (inputMessage.value.trim() !== '') {
+    if (inputIsNotEmpty()) {
         window.axios.post(`/chat/${chat.id}`, { message: {content: inputMessage.value, chat_id: chat.id} })
             .then((response) => {
-                inputMessage.value = ''; // Clear the input
+                clearInput();
                 scrollToBottom();
                 console.log(response);
             })
@@ -131,7 +141,7 @@ function sendMessage() {
 onMounted(() => {
     scrollToBottom();
 
-    window.Echo.channel(`chat.${chat.id}`)
+    window.Echo.private(`chat.${chat.id}`)
         .listen('MessageSent', (e) => {
             //this.messages.push(e.message);
             console.log(e);
@@ -139,7 +149,5 @@ onMounted(() => {
             scrollToBottom();
         });
 });
-
-// onMounted(scrollToBottom);
 
 </script>

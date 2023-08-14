@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\MessageSent;
 use App\Models\Chat;
+use App\Models\Message;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -83,7 +84,18 @@ class ChatController extends Controller
         $chat->load('latestMessage');
         $chat->load('messages');
 
-        return Inertia::render('Chat/ChatPage/Index', ['chat' => $chat]);
+        // Determine the current user and the correspondent
+        $currentUser = auth()->user();
+        $correspondent = ($chat->user1->id == $currentUser->id) ? $chat->user2 : $chat->user1;
+
+        // Prepare the chatData to pass to the view
+        $chatData = [
+            'chat' => $chat,
+            'currentUser' => $currentUser,
+            'correspondent' => $correspondent,
+        ];
+
+        return Inertia::render('Chat/ChatPage/Index', $chatData);
     }
 
     /**
@@ -99,7 +111,6 @@ class ChatController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //dd('update is {$id}');
 
         // Validate the request
         $request->validate([
@@ -107,15 +118,15 @@ class ChatController extends Controller
         ]);
 
         // Save the message to the database
-        /*
-        $message = Message::create([
-            'content' => $request->message,
-            'chat_id' => $request->chat_id,
-            // other fields like user_id, etc.
-        ]);
-        */
 
-        $message = $request['message'];
+        $message = Message::create([
+            'content' => $request->message['content'],
+            'chat_id' => $request->message['chat_id'],
+            'sender_id' => $request->user()->id,
+        ]);
+
+
+        //$message = $request['message'];
 
         // Fire the event
         event(new MessageSent($message));

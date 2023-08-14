@@ -34,7 +34,7 @@ class MessageSent implements ShouldBroadcast
         return [
             //new PrivateChannel('channel-name'),
             //new Channel('chat-' . $this->message->chat_id)
-            new Channel('chat.' . $this->message['chat_id'])
+            new PrivateChannel('chat.' . $this->message['chat_id'])
         ];
     }
 }

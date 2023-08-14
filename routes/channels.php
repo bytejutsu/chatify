@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Chat;
 use Illuminate\Support\Facades\Broadcast;
 
 /*
@@ -19,4 +20,9 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 
 Broadcast::channel('user-status.{userId}', function ($user, $userId) {
     return true;
+});
+
+Broadcast::channel('chat.{chat}', function ($user, $chatId) {
+    $chat = Chat::find($chatId);
+    return $chat && ($user->id === $chat->user1_id || $user->id === $chat->user2_id);
 });
