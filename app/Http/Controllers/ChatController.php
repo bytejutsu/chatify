@@ -7,6 +7,7 @@ use App\Models\Chat;
 use App\Models\Message;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class ChatController extends Controller
@@ -16,7 +17,12 @@ class ChatController extends Controller
      */
     public function index()
     {
-        $chats = Chat::all();
+        $userId = Auth::id();
+
+        $chats = Chat::where('user1_id', $userId)
+            ->orWhere('user2_id', $userId)
+            ->with(['user1', 'user2', 'latestMessage', 'messages'])
+            ->get();
 
         return Inertia::render('Chat/Index', ['chats' => $chats]);
     }
@@ -138,8 +144,10 @@ class ChatController extends Controller
             'sender_id' => $request->user()->id,
         ]);
 
-
-        //$message = $request['message'];
+        // Update the latest_message_id field of the chat
+        $chat = Chat::find($request->message['chat_id']);
+        $chat->latest_message_id = $message->id;
+        $chat->save();
 
         // Fire the event
         event(new MessageSent($message));

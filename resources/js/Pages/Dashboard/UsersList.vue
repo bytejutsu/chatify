@@ -13,7 +13,7 @@
 import UserCard from "@/Pages/Dashboard/UserCard.vue";
 
 let props = defineProps({
-    users: Object
+    users: Array
 });
 
 </script>

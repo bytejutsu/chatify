@@ -12,7 +12,10 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::all();
+        $loggedInUserId = Auth::id(); // Get the ID of the currently logged-in user
+
+        $users = User::where('id', '!=', $loggedInUserId)->get(); // Retrieve all users except the logged-in user
+
         return response()->json($users);
     }
 
