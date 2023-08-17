@@ -21,8 +21,23 @@ class ChatController extends Controller
 
         $chats = Chat::where('user1_id', $userId)
             ->orWhere('user2_id', $userId)
-            ->with(['user1', 'user2', 'latestMessage', 'messages'])
+            ->with(['latestMessage'])
             ->get();
+
+        // Transform the chats collection
+        $chats = $chats->map(function ($chat) use ($userId) {
+            // Determine the correspondent and unread count for the logged-in user
+            if ($chat->user1_id == $userId) {
+                $chat->correspondent = $chat->user2;
+                $chat->unread_count = $chat->user1_unread_count;
+            } else {
+                $chat->correspondent = $chat->user1;
+                $chat->unread_count = $chat->user2_unread_count;
+            }
+
+            // Return the modified chat object
+            return $chat;
+        });
 
         return Inertia::render('Chat/Index', ['chats' => $chats]);
     }
@@ -144,9 +159,17 @@ class ChatController extends Controller
             'sender_id' => $request->user()->id,
         ]);
 
-        // Update the latest_message_id field of the chat
+        // Update the latest_message_id field and unread_count of the chat
         $chat = Chat::find($request->message['chat_id']);
         $chat->latest_message_id = $message->id;
+
+        // Determine which user is the recipient and increment the appropriate unread_count
+        if ($chat->user1_id == $request->user()->id) {
+            $chat->user2_unread_count += 1;
+        } else {
+            $chat->user1_unread_count += 1;
+        }
+
         $chat->save();
 
         // Fire the event

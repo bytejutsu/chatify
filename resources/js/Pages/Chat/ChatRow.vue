@@ -1,5 +1,5 @@
 <template>
-    <tr class="text-gray-500 text-sm bg-white border-b border-gray-200">
+    <tr @click="goToChat" class="text-gray-500 text-sm bg-white border-b border-gray-200 cursor-pointer">
         <td class="p-2 m-2" colspan="1">
             <div class="flex justify-center items-center">
                 <div class="h-14 w-14 flex-shrink-0">
@@ -10,17 +10,17 @@
         <td class="p-2 m-2" colspan="7">
             <div class="flex flex-col justify-center items-start">
                 <div class="">
-                    <p class="whitespace-no-wrap text-base text-black font-bold">John Doe</p>
+                    <p class="whitespace-no-wrap text-base text-black font-bold">{{ chat.correspondent.name}}</p>
                 </div>
-                <p class="whitespace-no-wrap">{{chat.messages[chat.messages.length - 1].content}}</p>
+                <p class="whitespace-no-wrap">{{chat.latest_message.content}}</p>
             </div>
         </td>
         <td class="p-2 m-2" colspan="2">
             <div class="flex flex-col justify-between items-center">
-                <p class="whitespace-no-wrap text-xs">{{ formatTimestamp(chat.messages[chat.messages.length - 1].updated_at)}}</p>
+                <p class="whitespace-no-wrap text-xs">{{ formatTimestamp(chat.latest_message.created_at)}}</p>
                 <div class="py-1"></div>
                 <div class="flex">
-                    <span class="w-4 h-4 rounded-full bg-red-400 text-center text-xs text-white font-bold">{{chat.messages.length}}</span>
+                    <span class="w-4 h-4 rounded-full bg-red-400 text-center text-xs text-white font-bold">{{chat.unread_count}}</span>
                 </div>
             </div>
         </td>
@@ -30,6 +30,7 @@
 <script setup>
 import moment from 'moment';
 import {onMounted} from "vue";
+import {router} from "@inertiajs/vue3";
 
 const { chat } = defineProps({
     chat: Object,
@@ -53,12 +54,13 @@ const formatTimestamp = (timestamp) => {
     }
 }
 
+const goToChat = () => {
+    router.get(`/chat/${chat.id}`);
+};
+
 onMounted(() => {
     console.log("Chat Row Mounted");
     console.log(chat);
-    console.log(chat.latest_message);
-    console.log(chat.user1);
-    console.log(chat.user2);
 });
 
 </script>
