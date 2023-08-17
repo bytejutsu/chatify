@@ -36,7 +36,7 @@
                             </td>
                             <td class="p-2 m-2" colspan="2">
                                 <div class="flex flex-col justify-between items-center">
-                                    <p class="whitespace-no-wrap text-xs">{{chat.messages[chat.messages.length - 1].updated_at}}</p>
+                                    <p class="whitespace-no-wrap text-xs">{{ formatTimestamp(chat.messages[chat.messages.length - 1].updated_at)}}</p>
                                     <div class="py-1"></div>
                                     <div class="flex">
                                         <span class="w-4 h-4 rounded-full bg-red-400 text-center text-xs text-white font-bold">{{chat.messages.length}}</span>
@@ -53,9 +53,29 @@
 
 <script setup>
 
+import moment from 'moment';
+
 const { chats } = defineProps({
     chats: Array,
 });
+
+//todo: make formatTimestamp a computed property
+
+const formatTimestamp = (timestamp) => {
+    const now = moment();
+    const timeSent = moment(timestamp);
+    const diffDays = now.diff(timeSent, 'days');
+
+    if (diffDays === 0) {
+        return timeSent.format('HH:mm'); // e.g., 16:30
+    } else if (diffDays === 1) {
+        return 'Yesterday';
+    } else if (diffDays < 7) {
+        return timeSent.format('dddd'); // e.g., Monday
+    } else {
+        return timeSent.format('DD/MM/YYYY'); // e.g., 15/08/2023
+    }
+}
 
 </script>
 
