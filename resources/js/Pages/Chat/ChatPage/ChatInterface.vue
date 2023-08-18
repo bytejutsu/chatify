@@ -1,12 +1,12 @@
 <template>
     <div class="shadow-lg">
         <div class="flex flex-col bg-white h-full rounded-md">
-            <ChatHeader :user="correspondent" :unread_count="unread_count"/>
-            <div ref="scrollContainer" @scroll="checkScroll" class="flex flex-col grow justify-between overflow-y-auto overflow-x-clip">
+            <ChatHeader :user="chat.correspondent" :unread_count="unread_count"/>
+            <div ref="scrollContainer" @scroll="checkScroll" class="flex flex-col-reverse grow justify-between overflow-y-auto overflow-x-clip">
                 <!-- chat messages -->
                 <ul class="flex flex-col px-4 py-4">
                     <li v-for="(message, index) in messages" :key="index" class="">
-                        <div v-if="message.sender_id === currentUser.id">
+                        <div v-if="message.sender_id !== chat.correspondent.id">
                             <!-- chat message right-->
                             <div class="flex justify-end items-center mb-6 max-w-full">
                                 <div class="flex relative">
@@ -65,15 +65,9 @@
 import ChatHeader from '@/Pages/Chat/ChatPage/ChatHeader.vue';
 import ChatInput from '@/Pages/Chat/ChatPage/ChatInput.vue';
 import {ref, nextTick, onMounted, onUnmounted, onBeforeUnmount} from 'vue';
-import { router } from '@inertiajs/vue3'
 
-router.reload({ only: ["lazy_data"]});
-
-
-const { chat, currentUser, correspondent } = defineProps({
+const { chat } = defineProps({
     chat: Object,
-    currentUser: Object,
-    correspondent: Object,
 });
 
 const messages = ref(chat.messages);
@@ -83,13 +77,6 @@ const scrollContainer = ref(null);
 const inputMessage = ref('');
 const unread_count = ref(chat.unread_count);
 
-const isUserAtBottom = () => {
-    const container = scrollContainer.value;
-    // Check if the user is at the bottom
-    return container.scrollHeight - container.scrollTop === container.clientHeight;
-};
-
-
 const scrollToBottom = () => {
     nextTick(() => {
         scrollContainer.value.scrollTop = scrollContainer.value.scrollHeight;
@@ -98,25 +85,21 @@ const scrollToBottom = () => {
 
 
 const checkScroll = () => {
-    const isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
+    const { scrollTop } = scrollContainer.value;
 
-    const tolerance = isChrome ? 10 : 5; // Adjust the tolerance value as needed
+    // With flex-col-reverse, check if scrollTop is 0 to determine if it's at the bottom
+    const isAtBottom = scrollTop === 0;
 
-    const { scrollTop, scrollHeight, clientHeight } = scrollContainer.value;
-
-    const isAtBottom = (scrollTop + clientHeight + tolerance) >= scrollHeight;
+    //console.log(`scrollTop: ${scrollTop}`);
 
     if (isAtBottom) {
-        console.log("The scroll container is at its bottom!");
-        // You can perform any action here
+        //console.log("The scroll container is at its bottom!");
 
         // User is at the bottom, mark messages as read
         axios.post(`/chat/${chat.id}/read`)
             .then(response => {
                 unread_count.value = 0;  // Reset the local unread count
             });
-    }else{
-        console.log("The scroll container is not at its bottom!");
     }
 
     return isAtBottom;
@@ -147,10 +130,8 @@ function sendMessage() {
 
 onMounted(() => {
 
-    scrollContainer.value.addEventListener('scroll', checkScroll);
-
-    // Set the scrollTop property directly to scrollHeight
-    scrollContainer.value.scrollTop = scrollContainer.value.scrollHeight;
+    // call checkScroll to mark unread message as read since the scroll is at the bottom initially
+    checkScroll();
 
     window.Echo.private(`chat.${chat.id}`)
         .listen('MessageSent', (e) => {
@@ -162,8 +143,9 @@ onMounted(() => {
 
             //if sender is correspondent increment unread_count until chat is marked read
 
-            if(e.message.sender_id === correspondent.id){
+            if(e.message.sender_id === chat.correspondent.id){
                 unread_count.value += 1;
+                //console.log(`unread_count: ${unread_count.value}`);
             }
 
             //if the user is already at the bottom then an auto scroll will happen in case of receiving new messages
@@ -179,10 +161,6 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
     window.Echo.leave(`chat.${chat.id}`);
-});
-
-onUnmounted(() => {
-    scrollContainer.value.removeEventListener('scroll', checkScroll);
 });
 
 </script>

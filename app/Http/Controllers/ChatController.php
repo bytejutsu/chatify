@@ -122,12 +122,14 @@ class ChatController extends Controller
      */
     public function show(Request $request, string $id)
     {
+        /*
         $chat = Chat::find($id);
 
         // Return 404 if the chat doesn't exist
         if (!$chat) {
             abort(404);
         }
+
 
         // Load the user1,user2,... relationships
         $chat->load('user1', 'user2', 'latestMessage', 'messages');
@@ -143,15 +145,28 @@ class ChatController extends Controller
         }
 
         $correspondent = ($chat->user1->id == $currentUser->id) ? $chat->user2 : $chat->user1;
+        */
 
-        // Prepare the chatData to pass to the view
-        $chatData = [
-            'chat' => $chat,
-            'currentUser' => $currentUser,
-            'correspondent' => $correspondent,
-        ];
 
-        return Inertia::render('Chat/ChatPage/Index', $chatData);
+        $chat = Chat::where('id', $id)->with(['user1', 'user2', 'latestMessage', 'messages'])->first();
+
+        // Return 404 if the chat doesn't exist
+        if (!$chat) {
+            abort(404);
+        }
+
+        $userId = Auth::id();
+
+        // Determine the correspondent and unread count for the logged-in user
+        if ($chat->user1_id == $userId) {
+            $chat->correspondent = $chat->user2;
+            $chat->unread_count = $chat->user1_unread_count;
+        } else {
+            $chat->correspondent = $chat->user1;
+            $chat->unread_count = $chat->user2_unread_count;
+        }
+
+        return Inertia::render('Chat/ChatPage/Index', ['chat' => $chat]);
     }
 
     /**
