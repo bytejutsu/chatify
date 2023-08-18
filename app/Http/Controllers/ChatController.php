@@ -43,6 +43,28 @@ class ChatController extends Controller
     }
 
     /**
+     * Marking a Chat as Read.
+     */
+    public function markAsRead(Request $request, $id)
+    {
+        $chat = Chat::find($id);
+        $userId = Auth::id();
+
+        if ($chat->user1_id == $userId) {
+            $chat->user1_unread_count = 0;
+        } else {
+            $chat->user2_unread_count = 0;
+        }
+
+        $chat->save();
+
+        // Optionally, broadcast an event if you want real-time updates elsewhere
+
+        return response()->json(['message' => 'Messages marked as read']);
+    }
+
+
+    /**
      * Show the form for creating a new resource.
      */
     public function create()

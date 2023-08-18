@@ -17,10 +17,10 @@
         </td>
         <td class="p-2 m-2" colspan="2">
             <div class="flex flex-col justify-between items-center">
-                <p class="whitespace-no-wrap text-xs">{{ formatTimestamp(chat.latest_message.created_at)}}</p>
+                <p class="whitespace-no-wrap text-xs">{{ latestMessageFriendlyTimestamp }}</p>
                 <div class="py-1"></div>
                 <div class="flex">
-                    <span class="w-4 h-4 rounded-full bg-red-400 text-center text-xs text-white font-bold">{{chat.unread_count}}</span>
+                    <span v-if="chat.unread_count > 0" class="w-4 h-4 rounded-full bg-red-400 text-center text-xs text-white font-bold">{{chat.unread_count}}</span>
                 </div>
             </div>
         </td>
@@ -29,14 +29,14 @@
 
 <script setup>
 import moment from 'moment';
-import {onMounted} from "vue";
+import {onMounted, ref, computed, onBeforeUnmount} from "vue";
 import {router} from "@inertiajs/vue3";
 
 const { chat } = defineProps({
     chat: Object,
 });
 
-//todo: make formatTimestamp a computed property
+const latestMessageTimestamp = ref(chat.latest_message.created_at);
 
 const formatTimestamp = (timestamp) => {
     const now = moment();
@@ -54,6 +54,8 @@ const formatTimestamp = (timestamp) => {
     }
 }
 
+const latestMessageFriendlyTimestamp = computed(() => formatTimestamp(latestMessageTimestamp.value));
+
 const goToChat = () => {
     router.get(`/chat/${chat.id}`);
 };
@@ -61,6 +63,22 @@ const goToChat = () => {
 onMounted(() => {
     console.log("Chat Row Mounted");
     console.log(chat);
+
+    // Listen for the MessageSent event on the chat's private channel
+    window.Echo.private(`chat.${chat.id}`)
+        .listen('MessageSent', (e) => {
+            // Update the chat data with the new message
+            chat.latest_message = e.message;
+
+            // If the message sender is the correspondent, increment the unread count
+            if (e.message.sender_id === chat.correspondent.id) {
+                chat.unread_count += 1;
+            }
+        });
+});
+
+onBeforeUnmount(() => {
+    window.Echo.leave(`chat.${chat.id}`);
 });
 
 </script>

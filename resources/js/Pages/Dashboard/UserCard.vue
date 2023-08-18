@@ -24,7 +24,7 @@
 
 <script setup>
 
-import { onMounted, ref } from 'vue';
+import {onBeforeUnmount, onMounted, ref} from 'vue';
 import { Link } from '@inertiajs/vue3'
 
 const { user } = defineProps({
@@ -56,6 +56,10 @@ onMounted(() => {
             status.value = e.status;
         });
 
+});
+
+onBeforeUnmount(() => {
+    window.Echo.leave(`user-status.${user.id}`);
 });
 
 </script>

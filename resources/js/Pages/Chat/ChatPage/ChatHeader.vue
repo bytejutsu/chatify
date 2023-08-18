@@ -10,6 +10,11 @@
                 </div>
                 <div class="text-xs text-gray-600">{{ status ? 'online' : 'offline' }}</div>
             </div>
+            <div class="m-2">
+                <div class="flex">
+                    <span v-if="unread_count > 0" class="w-4 h-4 rounded-full bg-red-400 text-center text-xs text-white font-bold">{{ unread_count }}</span>
+                </div>
+            </div>
         </div>
         <!-- end user info -->
 
@@ -25,10 +30,11 @@
 
 <script setup>
 import { Link } from '@inertiajs/vue3'
-import { onMounted, ref } from 'vue';
+import {onBeforeUnmount, onMounted, ref} from 'vue';
 
-const { user } = defineProps({
-    user: Object
+const { user, unread_count } = defineProps({
+    user: Object,
+    unread_count: Number
 });
 
 const status = ref(user.is_online)
@@ -40,6 +46,10 @@ onMounted(() => {
             status.value = e.status;
         });
 
+});
+
+onBeforeUnmount(() => {
+    window.Echo.leave(`user-status.${user.id}`);
 });
 
 </script>

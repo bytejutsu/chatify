@@ -49,3 +49,5 @@ Route::middleware('auth')->post('/chat/start', [ChatController::class, 'startCha
 Route::middleware('auth')->get('/chat/{id}', [ChatController::class, 'show'])->name('chat.show');
 
 Route::middleware('auth')->post('/chat/{id}', [ChatController::class, 'update'])->name('chat.update');
+
+Route::middleware('auth')->post('/chat/{id}/read', [ChatController::class, 'markAsRead'])->name('chat.markAsRead');
