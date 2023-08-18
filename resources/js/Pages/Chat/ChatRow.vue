@@ -70,6 +70,9 @@ onMounted(() => {
             // Update the chat data with the new message
             chat.latest_message = e.message;
 
+            //update the latest message timestamp in real-time
+            latestMessageTimestamp.value = chat.latest_message.created_at;
+
             // If the message sender is the correspondent, increment the unread count
             if (e.message.sender_id === chat.correspondent.id) {
                 chat.unread_count += 1;
