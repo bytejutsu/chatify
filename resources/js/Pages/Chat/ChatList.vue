@@ -18,7 +18,7 @@
                     </tr>
                     </thead>
                     <tbody class="">
-                        <ChatRow v-for="chat in chats" :chat="chat"/>
+                        <ChatRow v-for="chat in chatsArray" :chat="chat"/>
                     </tbody>
                 </table>
             </div>
@@ -28,9 +28,17 @@
 
 <script setup>
 import ChatRow from "@/Pages/Chat/ChatRow.vue";
+import {onMounted, ref} from "vue";
+
+const chatsArray = ref(chats);
 
 const { chats } = defineProps({
     chats: Array,
+});
+
+onMounted(() => {
+   //chatsArray.value.reverse();
+   console.table(chatsArray.value);
 });
 
 </script>
