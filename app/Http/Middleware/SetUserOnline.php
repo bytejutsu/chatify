@@ -5,10 +5,9 @@ namespace App\Http\Middleware;
 use App\Events\UserStatusChanged;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class UpdateOnlineStatus
+class SetUserOnline
 {
     /**
      * Handle an incoming request.
@@ -17,11 +16,13 @@ class UpdateOnlineStatus
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check()) {
-            Auth::user()->update(['is_online' => true]);
+        if (auth()->check()) {
+            $user = auth()->user();
+            $user->is_online = true;
+            $user->last_activity = now();
+            $user->save();
 
-            // broadcast online userstatuschanged event
-            broadcast(new UserStatusChanged(Auth::user(), 1));
+            broadcast(new UserStatusChanged($user, $user->is_online));
         }
 
         return $next($request);

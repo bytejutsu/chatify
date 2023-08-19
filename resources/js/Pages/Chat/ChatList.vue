@@ -18,7 +18,7 @@
                     </tr>
                     </thead>
                     <tbody class="">
-                        <ChatRow v-for="chat in chatsArray" :chat="chat"/>
+                        <ChatRow v-for="chat in chatsArray" :chat="chat" :key="chat.id"/>
                     </tbody>
                 </table>
             </div>
@@ -28,18 +28,48 @@
 
 <script setup>
 import ChatRow from "@/Pages/Chat/ChatRow.vue";
-import {onMounted, ref} from "vue";
+import {onBeforeUnmount, onMounted, ref} from "vue";
+
+
+const { chats, userId } = defineProps({
+    chats: Array,
+    userId: Number
+});
 
 const chatsArray = ref(chats);
 
-const { chats } = defineProps({
-    chats: Array,
+onMounted(() => {
+    window.Echo.private(`chat-list.${userId}`)
+        .listen('ChatUpdated', (e) => {
+            console.log('event received on chat list');
+
+            console.log(`new chat: ${e.chat}`);
+
+            pushChatToTop(chatsArray.value, e.chat);
+
+        });
 });
 
-onMounted(() => {
-   //chatsArray.value.reverse();
-   console.table(chatsArray.value);
+
+onBeforeUnmount(() => {
+    window.Echo.leave(`chat-list.${userId}`);
 });
+
+
+const pushChatToTop = (chats, selectedChat) => {
+    const index = chats.findIndex(c => c.id === selectedChat.id);
+
+    if (index !== -1) {
+        chats.splice(index, 1);
+    }
+
+    chats.unshift(selectedChat);
+
+    chatsArray.value = [...chats];
+
+    console.table(chatsArray.value);
+}
+
 
 </script>
 

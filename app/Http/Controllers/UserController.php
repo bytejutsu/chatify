@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -14,9 +15,22 @@ class UserController extends Controller
     {
         $loggedInUserId = Auth::id(); // Get the ID of the currently logged-in user
 
-        $users = User::where('id', '!=', $loggedInUserId)->get(); // Retrieve all users except the logged-in user
+        $users = User::where('id', '!=', $loggedInUserId)
+            ->orderBy('last_activity', 'desc')
+            ->get(); // Retrieve all users except the logged-in user, sorted by last_activity
+
 
         return response()->json($users);
+    }
+
+    /**
+     * heartbeat request for updating the last_activity timestamp for the user.
+     */
+
+    public function heartbeat() {
+        $user = auth()->user();
+        $user->last_activity = now();
+        $user->save();
     }
 
     /**

@@ -2,6 +2,11 @@
 
 namespace App\Providers;
 
+use App\Events\ChatUpdated;
+use App\Events\MessageSent;
+use App\Listeners\ChatUpdatedListener;
+use App\Listeners\MessageSentListener;
+use App\Listeners\UpdateUserOfflineStatus;
 use Illuminate\Auth\Events\Registered;
 use App\Events\UserLoggedOut;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -20,7 +25,13 @@ class EventServiceProvider extends ServiceProvider
             SendEmailVerificationNotification::class,
         ],
         UserLoggedOut::class => [
-            \App\Listeners\UpdateUserOfflineStatus::class,
+            UpdateUserOfflineStatus::class,
+        ],
+        MessageSent::class => [
+            MessageSentListener::class,
+        ],
+        ChatUpdated::class => [
+            ChatUpdatedListener::class,
         ],
     ];
 

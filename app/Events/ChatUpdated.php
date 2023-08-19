@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Models\Chat;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -10,18 +11,18 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class UserLoggedOut
+class ChatUpdated implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $user;
+    public $chat;
 
     /**
      * Create a new event instance.
      */
-    public function __construct($user)
+    public function __construct(Chat $chat)
     {
-        $this->user = $user;
+        $this->chat = $chat;
     }
 
     /**
@@ -32,7 +33,8 @@ class UserLoggedOut
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('channel-name'),
+            new PrivateChannel('chat-list.' . $this->chat->user1_id),
+            new PrivateChannel('chat-list.' . $this->chat->user2_id)
         ];
     }
 }

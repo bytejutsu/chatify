@@ -42,6 +42,9 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/auth.php';
 
+Route::middleware('auth')->post('/user/heartbeat', [UserController::class, 'heartbeat']);
+
+
 Route::middleware('auth')->get('/chat', [ChatController::class, 'index'])->name('chat.index');
 
 Route::middleware('auth')->post('/chat/start', [ChatController::class, 'startChat'])->name('chat.start');

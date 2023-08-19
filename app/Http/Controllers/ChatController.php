@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ChatCreated;
+use App\Events\ChatUpdated;
 use App\Events\MessageSent;
 use App\Models\Chat;
 use App\Models\Message;
@@ -21,6 +23,7 @@ class ChatController extends Controller
 
         $chats = Chat::where('user1_id', $userId)
             ->orWhere('user2_id', $userId)
+            ->whereHas('latestMessage')
             ->with(['latestMessage'])
             ->get();
 
@@ -40,10 +43,10 @@ class ChatController extends Controller
         });
 
         $chats = $chats->sortByDesc(function ($chat) {
-            return $chat->latestMessage->created_at;
+            return $chat->latestMessage?->created_at;
         })->values()->all();
 
-        return Inertia::render('Chat/Index', ['chats' => $chats]);
+        return Inertia::render('Chat/Index', ['chats' => $chats, 'userId' => $userId]);
     }
 
     /**
@@ -63,6 +66,7 @@ class ChatController extends Controller
         $chat->save();
 
         // Optionally, broadcast an event if you want real-time updates elsewhere
+        event(new ChatUpdated($chat));
 
         return response()->json(['message' => 'Messages marked as read']);
     }
@@ -115,6 +119,7 @@ class ChatController extends Controller
                 'user1_id' => $userA_id,
                 'user2_id' => $userB_id,
             ]);
+
         }
 
         // Redirect to the chat interface (or return a view, as needed)
@@ -196,6 +201,8 @@ class ChatController extends Controller
 
         // Fire the event
         event(new MessageSent($message));
+
+        event(new ChatUpdated($chat));
 
         // Return a response
         return response()->json(['message' => 'Success'], 200);

@@ -21,6 +21,7 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+
     ];
 
     /**
@@ -41,7 +42,7 @@ class Kernel extends HttpKernel
 
             //added middleware
 
-            \App\Http\Middleware\UpdateOnlineStatus::class,
+            \App\Http\Middleware\SetUserOnline::class,
 
         ],
 

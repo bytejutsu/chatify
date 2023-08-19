@@ -7,8 +7,13 @@ import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import { Link } from '@inertiajs/vue3';
+import useHeartbeat from '@/Composables/useHeartbeat';
 
 const showingNavigationDropdown = ref(false);
+
+// Start the heartbeat
+useHeartbeat();
+
 </script>
 
 <template>
@@ -121,6 +126,9 @@ const showingNavigationDropdown = ref(false);
                         <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
                             Dashboard
                         </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('chat.index')" :active="route().current('chat.index')">
+                            Chats
+                        </ResponsiveNavLink>
                     </div>
 
                     <!-- Responsive Settings Options -->
@@ -163,3 +171,4 @@ const showingNavigationDropdown = ref(false);
         </div>
     </div>
 </template>
+
