@@ -28,7 +28,7 @@ class Kernel extends ConsoleKernel
                 // Broadcast the event for the specific user
                 broadcast(new UserStatusChanged($user, 0));
             }
-        })->everyTenMinutes();
+        })->everyFiveMinutes();
 
 
     }
