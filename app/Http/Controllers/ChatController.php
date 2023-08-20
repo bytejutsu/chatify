@@ -24,26 +24,21 @@ class ChatController extends Controller
         $chats = Chat::where('user1_id', $userId)
             ->orWhere('user2_id', $userId)
             ->whereHas('latestMessage')
-            ->with(['latestMessage'])
+            ->with(['latestMessage', 'user1', 'user2'])
             ->get();
+
+
 
         // Transform the chats collection
         $chats = $chats->map(function ($chat) use ($userId) {
             // Determine the correspondent and unread count for the logged-in user
-            if ($chat->user1_id == $userId) {
-                $chat->correspondent = $chat->user2;
-                $chat->unread_count = $chat->user1_unread_count;
-            } else {
-                $chat->correspondent = $chat->user1;
-                $chat->unread_count = $chat->user2_unread_count;
-            }
-
+            $chatData = $chat->toArray(); // Convert the chat model to an array
             // Return the modified chat object
-            return $chat;
+            return $chatData;
         });
 
-        $chats = $chats->sortByDesc(function ($chat) {
-            return $chat->latestMessage?->created_at;
+        $chats = $chats->sortByDesc(function ($chatData) {
+            return $chatData['latest_message']['created_at'];
         })->values()->all();
 
         return Inertia::render('Chat/Index', ['chats' => $chats, 'userId' => $userId]);
@@ -54,8 +49,9 @@ class ChatController extends Controller
      */
     public function markAsRead(Request $request, $id)
     {
-        $chat = Chat::find($id);
         $userId = Auth::id();
+
+        $chat = Chat::find($id);
 
         if ($chat->user1_id == $userId) {
             $chat->user1_unread_count = 0;
@@ -65,8 +61,12 @@ class ChatController extends Controller
 
         $chat->save();
 
+        // Determine the correspondent and unread count for the logged-in user
+        $chatData = $chat->toArray(); // Convert the chat model to an array
+        $chatData['latest_message'] = $chat->latestMessage;
+
         // Optionally, broadcast an event if you want real-time updates elsewhere
-        event(new ChatUpdated($chat));
+        //event(new ChatUpdated($chatData));
 
         return response()->json(['message' => 'Messages marked as read']);
     }
@@ -131,6 +131,7 @@ class ChatController extends Controller
      */
     public function show(Request $request, string $id)
     {
+        $userId = Auth::id();
 
         $chat = Chat::where('id', $id)->with(['user1', 'user2', 'latestMessage', 'messages'])->first();
 
@@ -138,8 +139,6 @@ class ChatController extends Controller
         if (!$chat) {
             abort(404);
         }
-
-        $userId = Auth::id();
 
         // Check if the current user is one of the chat participants
         if ($userId !== $chat->user1->id && $userId !== $chat->user2->id) {
@@ -173,6 +172,8 @@ class ChatController extends Controller
     public function update(Request $request, string $id)
     {
 
+        $userId = Auth::id();
+
         // Validate the request
         $request->validate([
             'message' => 'required',
@@ -187,7 +188,8 @@ class ChatController extends Controller
         ]);
 
         // Update the latest_message_id field and unread_count of the chat
-        $chat = Chat::find($request->message['chat_id']);
+        //$chat = Chat::find($request->message['chat_id']);
+        $chat = Chat::with(['latestMessage','user1', 'user2'])->find($request->message['chat_id']);
         $chat->latest_message_id = $message->id;
 
         // Determine which user is the recipient and increment the appropriate unread_count
@@ -199,10 +201,17 @@ class ChatController extends Controller
 
         $chat->save();
 
+        // Refresh the latestMessage relationship to get the updated message
+        $chat->load('latestMessage');
+
+        // Convert $chat to Array
+        $chatData = $chat->toArray();
+
         // Fire the event
         event(new MessageSent($message));
 
-        event(new ChatUpdated($chat));
+        // Fire the ChatUpdated event with the modified chat data
+        event(new ChatUpdated($chatData));
 
         // Return a response
         return response()->json(['message' => 'Success'], 200);

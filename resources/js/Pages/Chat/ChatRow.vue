@@ -10,17 +10,17 @@
         <td class="p-2 m-2" colspan="7">
             <div class="flex flex-col justify-center items-start">
                 <div class="">
-                    <p class="whitespace-no-wrap text-base text-black font-bold">{{ localChat.correspondent?.name}}</p>
+                    <p class="whitespace-no-wrap text-base text-black font-bold">{{ processedChat.correspondent.name }}</p>
                 </div>
-                <p class="whitespace-no-wrap">{{localChat.latest_message?.content}}</p>
+                <p class="whitespace-no-wrap">{{ processedChat.latest_message.content }}</p>
             </div>
         </td>
         <td class="p-2 m-2" colspan="2">
             <div class="flex flex-col justify-between items-center">
-                <p class="whitespace-no-wrap text-xs">{{ latestMessageFriendlyTimestamp }}</p>
+                <p class="whitespace-no-wrap text-xs">{{ formatTimestamp(processedChat.latest_message.created_at) }}</p>
                 <div class="py-1"></div>
                 <div class="flex">
-                    <span v-if="localChat.unread_count > 0" class="w-4 h-4 rounded-full bg-red-400 text-center text-xs text-white font-bold">{{chat.unread_count}}</span>
+                    <span v-if="processedChat.unread_count > 0" class="w-4 h-4 rounded-full bg-red-400 text-center text-xs text-white font-bold">{{chatData.unread_count}}</span>
                 </div>
             </div>
         </td>
@@ -29,18 +29,38 @@
 
 <script setup>
 import moment from 'moment';
-import {onMounted, ref, computed, onBeforeUnmount} from "vue";
+import {onMounted, ref, computed, onBeforeUnmount, watchEffect} from "vue";
 import {router} from "@inertiajs/vue3";
 
-const { chat } = defineProps({
-    chat: Object,
+const { chatData, userId } = defineProps({
+    chatData: Object,
+    userId: Number
 });
 
-const localChat = ref(chat);
+// Processed chat data ref
+const processedChat = ref({});
 
-//todo: investigate the cause of cannot read property of undefined and how to solve it other than with using ?.
+// Method to process chat data
+const processChatData = (chat) => {
+    if (chat.user1_id === userId) {
+        chat.correspondent = chat.user2;
+        chat.unread_count = chat.user1_unread_count;
+    } else {
+        chat.correspondent = chat.user1;
+        chat.unread_count = chat.user2_unread_count;
+    }
 
-const latestMessageTimestamp = ref(localChat.latest_message?.created_at);
+    chat.modifiedFrom = 'client process chat data';
+
+    return chat;
+}
+
+// Call the method and store the result in processedChat ref
+
+watchEffect(() => {
+    processedChat.value = processChatData(chatData);
+});
+
 
 const formatTimestamp = (timestamp) => {
     const now = moment();
@@ -58,36 +78,44 @@ const formatTimestamp = (timestamp) => {
     }
 }
 
-const latestMessageFriendlyTimestamp = computed(() => formatTimestamp(latestMessageTimestamp.value));
-
 const goToChat = () => {
-    router.get(`/chat/${chat.id}`);
+    router.get(`/chat/${chatData['id']}`);
 };
 
+
 onMounted(() => {
-    //console.log("Chat Row Mounted");
-    //console.log(chat);
 
-    // Listen for the MessageSent event on the chat's private channel
-    window.Echo.private(`chat.${chat.id}`)
-        .listen('MessageSent', (e) => {
-            // Update the chat data with the new message
-            localChat.value.latest_message = e.message;
-            localChat.value.correspondent = e.correspondent;
+//console.log(`processed chat`);
+//console.log(processedChat.value);
 
-            //update the latest message timestamp in real-time
-            latestMessageTimestamp.value = localChat.value.latest_message.created_at;
+/*
+//console.log("Chat Row Mounted");
+//console.log(chat);
 
-            // If the message sender is the correspondent, increment the unread count
-            if (e.message.sender_id === chat.correspondent.id) {
-                localChat.value.unread_count += 1;
-            }
-        });
+// Listen for the MessageSent event on the chat's private channel
+window.Echo.private(`chat.${chat.id}`)
+    .listen('MessageSent', (e) => {
+        // Update the chat data with the new message
+        localChat.value.latest_message = e.message;
+        localChat.value.correspondent = e.correspondent;
+
+        //update the latest message timestamp in real-time
+        latestMessageTimestamp.value = localChat.value.latest_message.created_at;
+
+        // If the message sender is the correspondent, increment the unread count
+        if (e.message.sender_id === chat.correspondent.id) {
+            localChat.value.unread_count += 1;
+        }
+    });
+
+ */
 });
 
+/*
 onBeforeUnmount(() => {
-    window.Echo.leave(`chat.${chat.id}`);
+window.Echo.leave(`chat.${chat.id}`);
 });
+*/
 
 </script>
 

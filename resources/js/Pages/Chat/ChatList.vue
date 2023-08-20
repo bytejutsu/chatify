@@ -18,7 +18,7 @@
                     </tr>
                     </thead>
                     <tbody class="">
-                        <ChatRow v-for="chat in chatsArray" :chat="chat" :key="chat.id"/>
+                        <ChatRow v-for="(chat, index) in state.chatsArray" :chatData="chat" :userId="userId" :key="getObjectHash(chat)"/>
                     </tbody>
                 </table>
             </div>
@@ -28,25 +28,30 @@
 
 <script setup>
 import ChatRow from "@/Pages/Chat/ChatRow.vue";
-import {onBeforeUnmount, onMounted, ref} from "vue";
-
+import {onBeforeUnmount, onMounted, reactive, ref} from "vue";
 
 const { chats, userId } = defineProps({
     chats: Array,
     userId: Number
 });
 
-const chatsArray = ref(chats);
+const state = reactive({
+    chatsArray: chats
+});
 
 onMounted(() => {
+
+    //console.log('chatsArray:')
+    //console.log(chatsArray);
+
     window.Echo.private(`chat-list.${userId}`)
         .listen('ChatUpdated', (e) => {
             console.log('event received on chat list');
 
-            console.log(`new chat: ${e.chat}`);
+            console.log(`new chatupdated event:`);
+            console.log(e);
 
-            pushChatToTop(chatsArray.value, e.chat);
-
+            pushChatToTop(e.chatData);
         });
 });
 
@@ -56,20 +61,20 @@ onBeforeUnmount(() => {
 });
 
 
-const pushChatToTop = (chats, selectedChat) => {
-    const index = chats.findIndex(c => c.id === selectedChat.id);
+const pushChatToTop = (chatData) => {
+
+    const index = state.chatsArray.findIndex(c => c.id === chatData['id']);
 
     if (index !== -1) {
-        chats.splice(index, 1);
+        state.chatsArray.splice(index, 1);
     }
 
-    chats.unshift(selectedChat);
-
-    chatsArray.value = [...chats];
-
-    console.table(chatsArray.value);
+    state.chatsArray.unshift(chatData);
 }
 
+function getObjectHash(obj) {
+    return JSON.stringify(obj);
+}
 
 </script>
 

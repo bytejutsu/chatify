@@ -15,14 +15,14 @@ class ChatUpdated implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $chat;
+    public $chatData;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(Chat $chat)
+    public function __construct(Array $chat)
     {
-        $this->chat = $chat;
+        $this->chatData = $chat;
     }
 
     /**
@@ -33,8 +33,8 @@ class ChatUpdated implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('chat-list.' . $this->chat->user1_id),
-            new PrivateChannel('chat-list.' . $this->chat->user2_id)
+            new PrivateChannel('chat-list.' . $this->chatData['user1_id']),
+            new PrivateChannel('chat-list.' . $this->chatData['user2_id'])
         ];
     }
 }
