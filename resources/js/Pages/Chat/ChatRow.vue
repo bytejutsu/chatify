@@ -20,7 +20,11 @@
                 <p class="whitespace-no-wrap text-xs">{{ formatTimestamp(processedChat.latest_message.created_at) }}</p>
                 <div class="py-1"></div>
                 <div class="flex">
-                    <span v-if="processedChat.unread_count > 0" class="w-4 h-4 rounded-full bg-red-400 text-center text-xs text-white font-bold">{{chatData.unread_count}}</span>
+                    <div v-if="processedChat.unread_count > 0" class="w-4 h-4 rounded-full bg-red-400 flex items-center justify-center">
+                        <span class="text-[8px] text-white">
+                            {{ chatData.unread_count > 99 ? '+99' : chatData.unread_count }}
+                        </span>
+                    </div>
                 </div>
             </div>
         </td>
@@ -50,7 +54,7 @@ const processChatData = (chat) => {
         chat.unread_count = chat.user2_unread_count;
     }
 
-    chat.modifiedFrom = 'client process chat data';
+    //chat.modifiedFrom = 'client process chat data';
 
     return chat;
 }
@@ -88,34 +92,12 @@ onMounted(() => {
 //console.log(`processed chat`);
 //console.log(processedChat.value);
 
-/*
+
 //console.log("Chat Row Mounted");
 //console.log(chat);
 
-// Listen for the MessageSent event on the chat's private channel
-window.Echo.private(`chat.${chat.id}`)
-    .listen('MessageSent', (e) => {
-        // Update the chat data with the new message
-        localChat.value.latest_message = e.message;
-        localChat.value.correspondent = e.correspondent;
-
-        //update the latest message timestamp in real-time
-        latestMessageTimestamp.value = localChat.value.latest_message.created_at;
-
-        // If the message sender is the correspondent, increment the unread count
-        if (e.message.sender_id === chat.correspondent.id) {
-            localChat.value.unread_count += 1;
-        }
-    });
-
- */
 });
 
-/*
-onBeforeUnmount(() => {
-window.Echo.leave(`chat.${chat.id}`);
-});
-*/
 
 </script>
 
