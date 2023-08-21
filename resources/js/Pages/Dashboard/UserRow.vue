@@ -27,7 +27,7 @@
             <Link href="/chat/start" method="post" as="button" :data="{ userB_id: user.id }"><i class="fa-solid fa-comment fa-xl"></i></Link>
         </td>
         <td class="px-2 py-4 bg-white rounded-r-lg shadow-right shadow-bottom" colspan="1">
-            <i class="fa-solid fa-arrow-right fa-xl"></i>
+            <Link :href="route('user.show', user.id)"><i class="fa-solid fa-arrow-right fa-xl"></i></Link>
         </td>
     </tr>
 </template>

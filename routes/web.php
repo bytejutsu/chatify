@@ -42,6 +42,8 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/auth.php';
 
+Route::middleware('auth')->get('/user/{id}', [UserController::class, 'show'])->name('user.show');
+
 Route::middleware('auth')->post('/user/heartbeat', [UserController::class, 'heartbeat']);
 
 
