@@ -9,8 +9,10 @@
         -->
 
         <div class="flex justify-center">
-            <div class="max-h-[600px] overflow-y-auto">
-                <UsersList :users="users" />
+            <div class="max-h-[600px] w-full overflow-y-auto">
+                <div class="flex justify-center">
+                    <UsersList :users="users" />
+                </div>
             </div>
         </div>
 

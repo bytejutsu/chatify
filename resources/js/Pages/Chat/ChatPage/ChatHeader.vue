@@ -37,13 +37,13 @@ const { user, unread_count } = defineProps({
     unread_count: Number
 });
 
-const status = ref(user.is_online)
+const status = ref(user.is_online === 1)
 
 onMounted(() => {
 
     window.Echo.private(`user-status.${user.id}`)
         .listen('UserStatusChanged', (e) => {
-            status.value = e.status;
+            status.value = !!e.status;
         });
 
 });

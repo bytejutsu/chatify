@@ -17,9 +17,9 @@
             <div class="flex justify-center items-center">
                 <span
                     class="px-2 py-1 rounded-full font-semibold"
-                    :class="{ 'bg-green-300 text-white': status === 1, 'bg-red-300 text-white': status === 0 }"
+                    :class="{ 'bg-green-300 text-white': status === true, 'bg-red-300 text-white': status === false }"
                 >
-                    {{ status === 1 ? 'Online' : 'Offline' }}
+                    {{ status === true ? 'Online' : 'Offline' }}
                 </span>
             </div>
         </td>
@@ -41,17 +41,18 @@ const { user } = defineProps({
     user: Object
 });
 
-const status = ref(user.is_online)
+const status = ref(user.is_online === 1);
 
 onMounted(() => {
 
+    //console.log(`user ${user.name} status is: `);
+    //console.log(status.value);
+
     window.Echo.private(`user-status.${user.id}`)
         .listen('UserStatusChanged', (e) => {
-            // Update the user's status based on the event data
-            // e.user and e.status contain the user and status information
-            //console.log(e);
-            //status.value = e.status;
-            status.value = e.status;
+            console.log(`user ${user.name} status: `);
+            console.log(e);
+            status.value = !!e.status;
         });
 
 });
