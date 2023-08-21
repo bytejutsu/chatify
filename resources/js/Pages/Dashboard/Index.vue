@@ -8,13 +8,11 @@
         </template>
         -->
 
-
-        <div class="p-12">
-            <div class="flex justify-center">
+        <div class="flex justify-center">
+            <div class="max-h-[600px] overflow-y-auto">
                 <UsersList :users="users" />
             </div>
         </div>
-
 
     </AuthenticatedLayout>
 </template>
