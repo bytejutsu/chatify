@@ -27,8 +27,6 @@ class ChatController extends Controller
             ->with(['latestMessage', 'user1', 'user2'])
             ->get();
 
-
-
         // Transform the chats collection
         $chats = $chats->map(function ($chat) use ($userId) {
             // Determine the correspondent and unread count for the logged-in user
@@ -63,7 +61,7 @@ class ChatController extends Controller
 
         // Determine the correspondent and unread count for the logged-in user
         $chatData = $chat->toArray(); // Convert the chat model to an array
-        $chatData['latest_message'] = $chat->latestMessage;
+        //$chatData['latest_message'] = $chat->latestMessage;
 
         // Optionally, broadcast an event if you want real-time updates elsewhere
         //event(new ChatUpdated($chatData));
@@ -95,34 +93,27 @@ class ChatController extends Controller
      */
     public function startChat(Request $request)
     {
-        // Validate the request (e.g., ensure userB_id is present and valid)
+        // Validate the request
         $request->validate([
-            'userB_id' => 'required|exists:users,id',
+            'correspondentId' => 'required|exists:users,id',
         ]);
 
-        // IDs of the two users involved in the chat
-        $userA_id = auth()->id(); // Assuming User A is the currently authenticated user
-        $userB_id = $request->input('userB_id');
+        $userId = auth()->id();
+        $correspondentId = $request->input('correspondentId');
 
-        // Check for existing chat between the two users
-        $chat = Chat::where(function ($query) use ($userA_id, $userB_id) {
-            $query->where('user1_id', $userA_id)
-                ->where('user2_id', $userB_id);
-        })->orWhere(function ($query) use ($userA_id, $userB_id) {
-            $query->where('user1_id', $userB_id)
-                ->where('user2_id', $userA_id);
-        })->first();
+        // Retrieve existing chat or create a new one
+        $chat = Chat::firstOrCreate(
+            [
+                ['user1_id', $userId],
+                ['user2_id', $correspondentId]
+            ],
+            [
+                ['user1_id', $correspondentId],
+                ['user2_id', $userId]
+            ]
+        );
 
-        // Create a new chat if none exists
-        if (!$chat) {
-            $chat = Chat::create([
-                'user1_id' => $userA_id,
-                'user2_id' => $userB_id,
-            ]);
-
-        }
-
-        // Redirect to the chat interface (or return a view, as needed)
+        // Redirect to the chat interface
         return redirect()->route('chat.show', ['id' => $chat->id]);
     }
 

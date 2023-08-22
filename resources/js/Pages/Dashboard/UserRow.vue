@@ -24,7 +24,7 @@
             </div>
         </td>
         <td class="px-2 py-4 bg-white shadow-bottom" colspan="1">
-            <Link href="/chat/start" method="post" as="button" :data="{ userB_id: user.id }"><i class="fa-solid fa-comment fa-xl"></i></Link>
+            <Link href="/chat/start" method="post" as="button" :data="{ correspondentId: user.id }"><i class="fa-solid fa-comment fa-xl"></i></Link>
         </td>
         <td class="px-2 py-4 bg-white rounded-r-lg shadow-right shadow-bottom" colspan="1">
             <Link :href="route('user.show', user.id)"><i class="fa-solid fa-arrow-right fa-xl"></i></Link>
