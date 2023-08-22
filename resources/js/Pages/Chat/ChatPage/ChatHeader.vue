@@ -20,7 +20,7 @@
 
         <!-- chat box action -->
         <div>
-            <Link :href="route('dashboard')" class="inline-flex hover:bg-indigo-50 rounded-full px-2 py-4" as="button" type="button">
+            <Link :href="previous_url" class="inline-flex hover:bg-indigo-50 rounded-full px-2 py-4" as="button" type="button">
                 <i class="fa-solid fa-xmark fa-xl"></i>
             </Link>
         </div>
@@ -30,12 +30,14 @@
 
 <script setup>
 import { Link } from '@inertiajs/vue3'
-import {onBeforeUnmount, onMounted, ref} from 'vue';
+import {inject, onBeforeUnmount, onMounted, ref} from 'vue';
 
 const { user, unread_count } = defineProps({
     user: Object,
-    unread_count: Number
+    unread_count: Number,
 });
+
+const previous_url = inject('previous_url');
 
 const status = ref(user.is_online === 1)
 

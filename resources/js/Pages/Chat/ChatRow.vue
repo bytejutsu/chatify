@@ -21,7 +21,7 @@
                 <div class="py-1"></div>
                 <div class="flex">
                     <div v-if="processedChat.unread_count > 0" class="w-4 h-4 rounded-full bg-red-400 flex items-center justify-center">
-                        <span class="text-[8px] text-white">
+                        <span class="text-[8px] text-white font-bold">
                             {{ chatData.unread_count > 99 ? '+99' : chatData.unread_count }}
                         </span>
                     </div>

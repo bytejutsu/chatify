@@ -146,6 +146,8 @@ class ChatController extends Controller
             abort(403, 'You are not authorized to access this chat.');
         }
 
+        //todo: maybe do this on the client-side
+
         // Determine the correspondent and unread count for the logged-in user
         if ($chat->user1_id == $userId) {
             $chat->correspondent = $chat->user2;
@@ -155,7 +157,7 @@ class ChatController extends Controller
             $chat->unread_count = $chat->user2_unread_count;
         }
 
-        return Inertia::render('Chat/ChatPage/Index', ['chat' => $chat]);
+        return Inertia::render('Chat/ChatPage/Index', ['chat' => $chat, 'previous_url' => url()->previous()]);
     }
 
     /**

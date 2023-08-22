@@ -50,8 +50,8 @@ onMounted(() => {
 
     window.Echo.private(`user-status.${user.id}`)
         .listen('UserStatusChanged', (e) => {
-            console.log(`user ${user.name} status: `);
-            console.log(e);
+            //console.log(`user ${user.name} status: `);
+            //console.log(e);
             status.value = !!e.status;
         });
 

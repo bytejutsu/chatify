@@ -13,12 +13,15 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import ChatInterface from '@/Pages/Chat/ChatPage/ChatInterface.vue';
 
-import { ref, onMounted } from 'vue';
+import {ref, onMounted, provide} from 'vue';
 
 // Define the props that are passed to the component
-const { chat } = defineProps({
+const { chat, previous_url } = defineProps({
     chat: Object,
+    previous_url: String
 });
+
+provide('previous_url', previous_url);
 
 </script>
 
