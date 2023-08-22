@@ -12,7 +12,7 @@ class UserController extends Controller
     /**
      * Display a listing of all the users.
      */
-    public function index()
+    public function getOtherUsers()
     {
         $loggedInUserId = Auth::id(); // Get the ID of the currently logged-in user
 
@@ -55,7 +55,7 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function showUserProfile(string $id)
     {
         $user = User::findOrFail($id);
         return Inertia::render('Profile/User/Index', ['user' => $user]);

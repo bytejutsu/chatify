@@ -16,7 +16,7 @@ class ChatController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function getUserChats()
     {
         $userId = Auth::id();
 
@@ -124,7 +124,7 @@ class ChatController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Request $request, string $id)
+    public function showChat(Request $request, string $id)
     {
         $userId = Auth::id();
 
@@ -155,7 +155,7 @@ class ChatController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function sendMessage(Request $request, string $id)
     {
 
         $userId = Auth::id();

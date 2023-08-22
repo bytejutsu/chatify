@@ -28,7 +28,7 @@ Route::get('/', function () {
     ]);
 });
 
-Route::middleware(['auth', 'verified'])->get('/dashboard', [UserController::class, 'index'])->name('dashboard');
+Route::middleware(['auth', 'verified'])->get('/dashboard', [UserController::class, 'getOtherUsers'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -38,17 +38,17 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/auth.php';
 
-Route::middleware('auth')->get('/user/{id}', [UserController::class, 'show'])->name('user.show');
+Route::middleware('auth')->get('/user/{id}', [UserController::class, 'showUserProfile'])->name('user.show');
 
 Route::middleware('auth')->post('/user/heartbeat', [UserController::class, 'heartbeat']);
 
 
-Route::middleware('auth')->get('/chat', [ChatController::class, 'index'])->name('chat.index');
+Route::middleware('auth')->get('/chat', [ChatController::class, 'getUserChats'])->name('chat.getUserChats');
 
 Route::middleware('auth')->post('/chat/start', [ChatController::class, 'startChat'])->name('chat.start');
 
-Route::middleware('auth')->get('/chat/{id}', [ChatController::class, 'show'])->name('chat.show');
+Route::middleware('auth')->get('/chat/{id}', [ChatController::class, 'showChat'])->name('chat.show');
 
-Route::middleware('auth')->post('/chat/{id}', [ChatController::class, 'update'])->name('chat.update');
+Route::middleware('auth')->post('/chat/{id}', [ChatController::class, 'sendMessage'])->name('chat.sendMessage');
 
 Route::middleware('auth')->post('/chat/{id}/read', [ChatController::class, 'markAsRead'])->name('chat.markAsRead');

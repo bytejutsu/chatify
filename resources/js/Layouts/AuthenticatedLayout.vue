@@ -40,7 +40,7 @@ useHeartbeat();
                             </div>
                             <!-- Chats Link -->
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink :href="route('chat.index')" :active="route().current('chat.index')">
+                                <NavLink :href="route('chat.getUserChats')" :active="route().current('chat.getUserChats')">
                                     Chats
                                 </NavLink>
                             </div>
@@ -126,7 +126,7 @@ useHeartbeat();
                         <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
                             Dashboard
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink :href="route('chat.index')" :active="route().current('chat.index')">
+                        <ResponsiveNavLink :href="route('chat.getUserChats')" :active="route().current('chat.getUserChats')">
                             Chats
                         </ResponsiveNavLink>
                     </div>
