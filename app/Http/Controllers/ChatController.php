@@ -101,17 +101,22 @@ class ChatController extends Controller
         $userId = auth()->id();
         $correspondentId = $request->input('correspondentId');
 
-        // Retrieve existing chat or create a new one
-        $chat = Chat::firstOrCreate(
-            [
-                ['user1_id', $userId],
-                ['user2_id', $correspondentId]
-            ],
-            [
-                ['user1_id', $correspondentId],
-                ['user2_id', $userId]
-            ]
-        );
+        // Try to find an existing chat
+        $chat = Chat::where(function ($query) use ($userId, $correspondentId) {
+            $query->where('user1_id', $userId)
+                ->where('user2_id', $correspondentId);
+        })->orWhere(function ($query) use ($userId, $correspondentId) {
+            $query->where('user1_id', $correspondentId)
+                ->where('user2_id', $userId);
+        })->first();
+
+        // If no chat exists, create a new one
+        if (!$chat) {
+            $chat = Chat::create([
+                'user1_id' => $userId,
+                'user2_id' => $correspondentId,
+            ]);
+        }
 
         // Redirect to the chat interface
         return redirect()->route('chat.show', ['id' => $chat->id]);
