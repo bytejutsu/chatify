@@ -21,7 +21,9 @@ class UserController extends Controller
             ->get(); // Retrieve all users except the logged-in user, sorted by last_activity
 
 
-        return response()->json($users);
+        //return response()->json($users);
+
+        return Inertia::render('Dashboard/Index', ['users' => $users]);
     }
 
     /**
