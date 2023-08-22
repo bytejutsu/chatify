@@ -3,7 +3,7 @@
 
     <AuthenticatedLayout class="max-h-screen">
         <div class="py-2 h-[calc(100vh-66px)]">
-            <ChatInterface :chat="chat" class="h-full"/>
+            <ChatInterface :chat="chat" :userId="userId" class="h-full"/>
         </div>
     </AuthenticatedLayout>
 </template>
@@ -16,8 +16,9 @@ import ChatInterface from '@/Pages/Chat/ChatPage/ChatInterface.vue';
 import {ref, onMounted, provide} from 'vue';
 
 // Define the props that are passed to the component
-const { chat, previous_url } = defineProps({
+const { chat, userId ,previous_url } = defineProps({
     chat: Object,
+    userId: Number,
     previous_url: String
 });
 

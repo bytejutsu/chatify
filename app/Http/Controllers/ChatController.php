@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\ChatCreated;
 use App\Events\ChatUpdated;
 use App\Events\MessageSent;
 use App\Models\Chat;
@@ -142,18 +141,7 @@ class ChatController extends Controller
             abort(403, 'You are not authorized to access this chat.');
         }
 
-        //todo: maybe do this on the client-side
-
-        // Determine the correspondent and unread count for the logged-in user
-        if ($chat->user1_id == $userId) {
-            $chat->correspondent = $chat->user2;
-            $chat->unread_count = $chat->user1_unread_count;
-        } else {
-            $chat->correspondent = $chat->user1;
-            $chat->unread_count = $chat->user2_unread_count;
-        }
-
-        return Inertia::render('Chat/ChatPage/Index', ['chat' => $chat, 'previous_url' => url()->previous()]);
+        return Inertia::render('Chat/ChatPage/Index', ['chat' => $chat,'userId' => $userId ,'previous_url' => url()->previous()]);
     }
 
     /**

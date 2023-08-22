@@ -1,12 +1,12 @@
 <template>
     <div class="shadow-lg">
         <div class="flex flex-col bg-white h-full rounded-md">
-            <ChatHeader :user="chat.correspondent" :unread_count="unread_count"/>
+            <ChatHeader :user="correspondent" :unread_count="unread_count"/>
             <div ref="scrollContainer" @scroll="checkScroll" class="flex flex-col-reverse grow justify-between overflow-y-auto overflow-x-clip">
                 <!-- chat messages -->
                 <ul class="flex flex-col px-4 py-4">
                     <li v-for="(message, index) in messages" :key="index" class="">
-                        <div v-if="message.sender_id !== chat.correspondent.id">
+                        <div v-if="message.sender_id !== correspondent.id">
                             <!-- chat message right-->
                             <div class="flex justify-end items-center mb-6 max-w-full">
                                 <div class="flex relative">
@@ -66,8 +66,9 @@ import ChatHeader from '@/Pages/Chat/ChatPage/ChatHeader.vue';
 import ChatInput from '@/Pages/Chat/ChatPage/ChatInput.vue';
 import {ref, nextTick, onMounted, onUnmounted, onBeforeUnmount} from 'vue';
 
-const { chat } = defineProps({
+const { chat, userId } = defineProps({
     chat: Object,
+    userId: Number
 });
 
 const messages = ref(chat.messages);
@@ -75,7 +76,12 @@ const messages = ref(chat.messages);
 
 const scrollContainer = ref(null);
 const inputMessage = ref('');
-const unread_count = ref(chat.unread_count);
+//const unread_count = ref(chat.unread_count);
+
+const correspondent = userId === chat.user1_id ? chat.user2 : chat.user1;
+
+const unread_count = ref(userId === chat.user1_id ? chat.user1_unread_count : chat.user2_unread_count);
+
 
 const scrollToBottom = () => {
     nextTick(() => {
@@ -143,7 +149,7 @@ onMounted(() => {
 
             //if sender is correspondent increment unread_count until chat is marked read
 
-            if(e.message.sender_id === chat.correspondent.id){
+            if(e.message.sender_id === correspondent.id){
                 unread_count.value += 1;
                 //console.log(`unread_count: ${unread_count.value}`);
             }
