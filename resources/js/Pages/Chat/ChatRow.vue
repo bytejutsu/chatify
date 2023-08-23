@@ -32,7 +32,8 @@
 </template>
 
 <script setup>
-import moment from 'moment';
+//import moment from 'moment';
+var moment = require('moment');
 import {onMounted, ref, computed, onBeforeUnmount, watchEffect} from "vue";
 import {router} from "@inertiajs/vue3";
 
