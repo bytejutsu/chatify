@@ -1,22 +1,27 @@
 <template>
     <Head title="Dashboard" />
 
-    <AuthenticatedLayout>
+    <AuthenticatedLayout class="">
         <!--
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">Dashboard</h2>
         </template>
         -->
 
-        <div class="flex justify-center">
-            <div class="max-h-[600px] w-full overflow-y-auto">
-                <div class="flex justify-center">
-                    <UsersList :users="users" />
-                </div>
-            </div>
+        <div class="max-h-[600px] w-full overflow-y-auto">
+            <UsersList :users="users"/>
         </div>
 
     </AuthenticatedLayout>
+
+    <!--
+    <AuthenticatedLayout class="max-h-screen">
+        <div class="py-2 h-[calc(100vh-66px)]">
+            <ChatInterface :chat="chat" :userId="userId" class="h-full"/>
+        </div>
+    </AuthenticatedLayout>
+    -->
+
 </template>
 
 <script setup>
