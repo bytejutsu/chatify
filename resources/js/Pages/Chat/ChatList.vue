@@ -18,7 +18,7 @@
                     </tr>
                     </thead>
                     <tbody class="">
-                        <ChatRow v-for="(chat, index) in state.chatsArray" :chatData="chat" :userId="userId" :key="getObjectHash(chat)"/>
+                        <ChatRow v-for="(chat, index) in state.chatsArray" :chat="chat" :userId="userId" :key="getObjectHash(chat)"/>
                     </tbody>
                 </table>
             </div>
@@ -51,7 +51,7 @@ onMounted(() => {
             console.log(`new chatupdated event:`);
             console.log(e);
 
-            pushChatToTop(e.chatData);
+            pushChatToTop(e.chat);
         });
 });
 
@@ -61,15 +61,15 @@ onBeforeUnmount(() => {
 });
 
 
-const pushChatToTop = (chatData) => {
+const pushChatToTop = (chat) => {
 
-    const index = state.chatsArray.findIndex(c => c.id === chatData['id']);
+    const index = state.chatsArray.findIndex(c => c.id === chat.id);
 
     if (index !== -1) {
         state.chatsArray.splice(index, 1);
     }
 
-    state.chatsArray.unshift(chatData);
+    state.chatsArray.unshift(chat);
 }
 
 function getObjectHash(obj) {

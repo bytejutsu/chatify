@@ -26,16 +26,9 @@ class ChatController extends Controller
             ->with(['latestMessage', 'user1', 'user2'])
             ->get();
 
-        // Transform the chats collection
-        $chats = $chats->map(function ($chat) use ($userId) {
-            // Determine the correspondent and unread count for the logged-in user
-            $chatData = $chat->toArray(); // Convert the chat model to an array
-            // Return the modified chat object
-            return $chatData;
-        });
 
-        $chats = $chats->sortByDesc(function ($chatData) {
-            return $chatData['latestMessage']['created_at'];
+        $chats = $chats->sortByDesc(function ($chat) {
+            return $chat->latestMessage->created_at;
         })->values()->all();
 
         return Inertia::render('Chat/Index', ['chats' => $chats, 'userId' => $userId]);
@@ -59,7 +52,7 @@ class ChatController extends Controller
         $chat->save();
 
         // Determine the correspondent and unread count for the logged-in user
-        $chatData = $chat->toArray(); // Convert the chat model to an array
+        //$chatData = $chat->toArray(); // Convert the chat model to an array
         //$chatData['latest_message'] = $chat->latestMessage;
 
         // Optionally, broadcast an event if you want real-time updates elsewhere
@@ -191,13 +184,13 @@ class ChatController extends Controller
         $chat->load('latestMessage');
 
         // Convert $chat to Array
-        $chatData = $chat->toArray();
+        //$chatData = $chat->toArray();
 
         // Fire the event
         event(new MessageSent($message));
 
         // Fire the ChatUpdated event with the modified chat data
-        event(new ChatUpdated($chatData));
+        event(new ChatUpdated($chat));
 
         // Return a response
         return response()->json(['message' => 'Success'], 200);

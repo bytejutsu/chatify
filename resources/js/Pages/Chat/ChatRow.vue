@@ -22,7 +22,7 @@
                 <div class="flex">
                     <div v-if="processedChat.unread_count > 0" class="w-4 h-4 rounded-full bg-red-400 flex items-center justify-center">
                         <span class="text-[8px] text-white font-bold">
-                            {{ chatData.unread_count > 99 ? '+99' : chatData.unread_count }}
+                            {{ processedChat.unread_count > 99 ? '+99' : processedChat.unread_count }}
                         </span>
                     </div>
                 </div>
@@ -36,8 +36,8 @@ import moment from 'moment';
 import {onMounted, ref, computed, onBeforeUnmount, watchEffect} from "vue";
 import {router} from "@inertiajs/vue3";
 
-const { chatData, userId } = defineProps({
-    chatData: Object,
+const { chat, userId } = defineProps({
+    chat: Object,
     userId: Number
 });
 
@@ -62,7 +62,7 @@ const processChatData = (chat) => {
 // Call the method and store the result in processedChat ref
 
 watchEffect(() => {
-    processedChat.value = processChatData(chatData);
+    processedChat.value = processChatData(chat);
 });
 
 
@@ -83,7 +83,7 @@ const formatTimestamp = (timestamp) => {
 }
 
 const goToChat = () => {
-    router.get(`/chat/${chatData['id']}`);
+    router.get(`/chat/${chat['id']}`);
 };
 
 
