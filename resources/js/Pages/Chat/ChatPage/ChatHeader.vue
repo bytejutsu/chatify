@@ -18,13 +18,22 @@
         </div>
         <!-- end user info -->
 
-        <!-- chat box action -->
-        <div>
-            <Link :href="previous_url" class="inline-flex hover:bg-indigo-50 rounded-full px-2 py-4" as="button" type="button">
-                <i class="fa-solid fa-xmark fa-xl"></i>
-            </Link>
+        <div class="flex">
+            <!-- video call action -->
+            <div class="invisible">
+                <Link :href="previous_url" class="inline-flex hover:bg-indigo-50 rounded-full px-2 py-4" as="button" type="button">
+                    <i class="fa-solid fa-video fa-xl"></i>
+                </Link>
+            </div>
+            <!-- end video call action -->
+            <!-- chat box action -->
+            <div>
+                <Link :href="previous_url" class="inline-flex hover:bg-indigo-50 rounded-full px-2 py-4" as="button" type="button">
+                    <i class="fa-solid fa-xmark fa-xl"></i>
+                </Link>
+            </div>
+            <!-- end chat box action -->
         </div>
-        <!-- end chat box action -->
     </div>
 </template>
 
