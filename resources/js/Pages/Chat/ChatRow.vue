@@ -32,7 +32,6 @@
 </template>
 
 <script setup>
-import { format, differenceInDays, isToday, isYesterday } from '/date-fns';
 import {onMounted, ref, computed, onBeforeUnmount, watchEffect} from "vue";
 import {router} from "@inertiajs/vue3";
 
@@ -65,10 +64,10 @@ watchEffect(() => {
     processedChat.value = processChatData(chat);
 });
 
-/*
+
 const formatTimestamp = (timestamp) => {
-    const now = moment();
-    const timeSent = moment(timestamp);
+    const now = window.moment();
+    const timeSent = window.moment(timestamp);
     const diffDays = now.diff(timeSent, 'days');
 
     if (diffDays === 0) {
@@ -79,25 +78,6 @@ const formatTimestamp = (timestamp) => {
         return timeSent.format('dddd'); // e.g., Monday
     } else {
         return timeSent.format('DD/MM/YYYY'); // e.g., 15/08/2023
-    }
-}
-*/
-
-const formatTimestamp = (timestamp) => {
-    const now = new Date();
-    const timeSent = new Date(timestamp);
-
-    if (isToday(timeSent)) {
-        return format(timeSent, 'HH:mm'); // e.g., 16:30
-    } else if (isYesterday(timeSent)) {
-        return 'Yesterday';
-    } else {
-        const diffDays = differenceInDays(now, timeSent);
-        if (diffDays < 7) {
-            return format(timeSent, 'EEEE'); // e.g., Monday
-        } else {
-            return format(timeSent, 'dd/MM/yyyy'); // e.g., 15/08/2023
-        }
     }
 }
 

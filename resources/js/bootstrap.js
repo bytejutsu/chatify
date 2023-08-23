@@ -32,3 +32,7 @@ window.Echo = new Echo({
 });
 
 import '@fortawesome/fontawesome-free/css/all.css';
+
+import moment from 'moment';
+
+window.moment = moment;
