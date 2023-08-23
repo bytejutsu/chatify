@@ -27,4 +27,4 @@ jobs:
           username: ${{ secrets.USERNAME }}
           port: ${{ secrets.PORT }}
           key: ${{ secrets.SSHKEY }}
-          script: "cd /var/www/html/chatify && ./.scripts/deploy.sh"
+          script: "cd /var/www/html/chatify && chmod +x .scripts/deploy.sh && ./.scripts/deploy.sh"
