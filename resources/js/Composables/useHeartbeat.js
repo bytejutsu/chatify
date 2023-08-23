@@ -1,12 +1,12 @@
 import { onMounted, onUnmounted } from 'vue';
-import axios from 'axios';
+//import axios from 'axios';
 
 export default function useHeartbeat() {
     let interval;
 
     const startHeartbeat = () => {
         interval = setInterval(() => {
-            axios.post('/user/heartbeat')
+            window.axios.post('/user/heartbeat')
                 .then(response => {
                     // Handle successful response if needed
                 })
