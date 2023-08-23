@@ -7,6 +7,9 @@ echo "Deployment started ..."
 # if already is in maintenance mode
 (php artisan down) || true
 
+# Stash any local changes
+git stash
+
 # Pull the latest version of the app
 git pull origin production
 
