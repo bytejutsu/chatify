@@ -22,6 +22,7 @@ php artisan clear-compiled
 # Clear Laravel's cache
 php artisan cache:clear
 
+
 # Clear the config cache
 php artisan config:clear
 
