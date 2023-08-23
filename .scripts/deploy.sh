@@ -19,6 +19,12 @@ composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
 # Clear the old cache
 php artisan clear-compiled
 
+# Clear Laravel's cache
+php artisan cache:clear
+
+# Clear the config cache
+php artisan config:clear
+
 # Recreate cache
 php artisan optimize
 
