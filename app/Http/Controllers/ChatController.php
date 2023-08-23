@@ -27,9 +27,11 @@ class ChatController extends Controller
             ->get();
 
 
+        /*
         $chats = $chats->sortByDesc(function ($chat) {
             return $chat->latestMessage->created_at;
         })->values()->all();
+        */
 
         return Inertia::render('Chat/Index', ['chats' => $chats, 'userId' => $userId]);
     }
