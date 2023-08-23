@@ -32,7 +32,7 @@
 </template>
 
 <script setup>
-import { format, differenceInDays, isToday, isYesterday } from 'date-fns';
+import { format, differenceInDays, isToday, isYesterday } from '/date-fns';
 import {onMounted, ref, computed, onBeforeUnmount, watchEffect} from "vue";
 import {router} from "@inertiajs/vue3";
 
