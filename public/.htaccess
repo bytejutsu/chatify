@@ -4,8 +4,7 @@
     </IfModule>
 
     RewriteEngine On
-    RewriteBase /chatify/
-
+    RewriteBase /
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
